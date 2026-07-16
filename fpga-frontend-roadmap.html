@@ -127,16 +127,6 @@
   .topic.done { opacity: .55; text-decoration: line-through; }
   .topic.adv { background: var(--chip-adv); }
   .topic.opt { background: var(--chip-optional); font-weight: 500; }
-  .topic.fast::before { content: "⚡"; margin-right: 5px; }
-  body.fastmode .topic:not(.fast) { opacity: .22; filter: saturate(.3); }
-  body.fastmode .topic.fast { box-shadow: 0 0 0 3px var(--accent), var(--shadow); }
-  .fast-row { text-align: center; margin-top: 16px; }
-  .fast-toggle {
-    background: var(--card); color: var(--ink); border: 2px solid var(--node-border);
-    border-radius: 999px; padding: 8px 18px; font-weight: 650; font-size: .9rem;
-    cursor: pointer; box-shadow: var(--shadow);
-  }
-  body.fastmode .fast-toggle { background: var(--chip); box-shadow: 0 0 0 3px var(--accent); }
   .topic::after {
     content: ""; position: absolute; top: 50%; width: 46px;
     border-top: 2px dashed var(--line); opacity: .5;
@@ -241,9 +231,6 @@
   <p class="howto">Click any stage or topic to open details: what to learn, curated references,
      hands-on exercises, corner cases &amp; gotchas, and best practices. Use “Mark as done” to track progress
      (saved in your browser).</p>
-  <p class="fast-row">
-    <button id="fastToggle" class="fast-toggle" title="Pareto view: spotlight the ~20% of topics that deliver ~80% of job-readiness">⚡ Fast Track: OFF</button>
-  </p>
 </header>
 
 <main class="roadmap" id="roadmap"></main>
@@ -2649,25 +2636,6 @@ const LIBRARY = [
 const $ = (s, el=document) => el.querySelector(s);
 const doneSet = new Set(JSON.parse(localStorage.getItem("fpga-roadmap-done") || "[]"));
 
-/* Pareto Fast Track: the ~20% of topics that deliver ~80% of day-one
-   job-readiness. Everything else deepens; these enable. */
-const FAST_TRACK = new Set([
-  "t-seq",        // flip-flops, setup/hold, synchronous design
-  "t-sv-design",  // synthesizable SystemVerilog
-  "t-rtl-synth",  // code → hardware inference
-  "t-fsm",        // control logic
-  "t-tb-basics",  // self-checking testbenches
-  "t-sta",        // static timing analysis
-  "t-constraints",// XDC/SDC
-  "t-cdc",        // clock domain crossing
-  "t-asyncfifo",  // the rite of passage
-  "t-reports",    // reading timing/utilization reports
-  "t-ila",        // on-chip debug
-  "t-lowspeed",   // UART/SPI/I2C bring-up trinity
-  "t-axi"         // the system-design lingua franca
-]);
-let fastMode = localStorage.getItem("fpga-roadmap-fast") === "1";
-
 function saveDone() {
   localStorage.setItem("fpga-roadmap-done", JSON.stringify([...doneSet]));
   updateProgress();
@@ -2700,9 +2668,7 @@ function render() {
     const right = document.createElement("div"); right.className = "col right";
     stage.topics.forEach((t, i) => {
       const chip = document.createElement("div");
-      chip.className = "topic " + (t.kind || "core")
-        + (FAST_TRACK.has(t.id) ? " fast" : "")
-        + (doneSet.has(t.id) ? " done" : "");
+      chip.className = "topic " + (t.kind || "core") + (doneSet.has(t.id) ? " done" : "");
       chip.textContent = t.title;
       chip.dataset.id = t.id;
       chip.addEventListener("click", () => openTopic(stage, si, t));
@@ -2760,8 +2726,7 @@ function resSection(resources) {
 }
 
 function openTopic(stage, si, t) {
-  $("#dStage").textContent = `Stage ${si} · ${stage.title}`
-    + (FAST_TRACK.has(t.id) ? " · ⚡ Fast Track topic" : "");
+  $("#dStage").textContent = `Stage ${si} · ${stage.title}`;
   $("#dTitle").textContent = t.title;
   const done = doneSet.has(t.id);
   $("#dBody").innerHTML =
@@ -2798,21 +2763,8 @@ $("#overlay").addEventListener("click", closeDrawer);
 $("#dClose").addEventListener("click", closeDrawer);
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
 
-function applyFastMode() {
-  document.body.classList.toggle("fastmode", fastMode);
-  $("#fastToggle").textContent = fastMode
-    ? "⚡ Fast Track: ON — the vital 20% (13 topics)"
-    : "⚡ Fast Track: OFF";
-}
-$("#fastToggle").addEventListener("click", () => {
-  fastMode = !fastMode;
-  localStorage.setItem("fpga-roadmap-fast", fastMode ? "1" : "0");
-  applyFastMode();
-});
-
 render();
 renderLibrary();
-applyFastMode();
 </script>
 </body>
 </html>
