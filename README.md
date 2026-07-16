@@ -33,3 +33,4 @@ A complete zero-to-expert path for FPGA front-end engineering covering **design,
 - Per-stage milestones ("you're ready to move on when…")
 - Progress tracking with "Mark as done" (persisted in browser localStorage)
 - Light/dark theme aware, mobile responsive, fully self-contained (no external assets)
+- **Free Courses & YouTube Hidden Gems** library: curated video companions mapped to each stage (Onur Mutlu's ETH lectures, Digi-Key's Intro to FPGA series, Vipin Kizheppatt's Vivado labs, Cornell ECE 5760, Robert Baruch's formal verification series, Verification Academy, and more)
