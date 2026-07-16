@@ -1515,7 +1515,8 @@ const ROADMAP = [
       { t: "site", label: "Verification Academy — UVM Cookbook (the standard reference)", url: "https://verificationacademy.com/cookbook/uvm-universal-verification-methodology" },
       { t: "site", label: "ClueLogic — 'UVM Tutorial for Candy Lovers' (gentlest on-ramp)", url: "https://cluelogic.com/2011/07/uvm-tutorial-for-candy-lovers-overview/" },
       { t: "video", label: "Verification Academy — 'UVM Basics' free video course (register free)", url: "https://verificationacademy.com/courses/uvm-basics" },
-      { t: "doc", label: "Accellera UVM 1.2 / IEEE 1800.2 reference", url: "https://accellera.org/downloads/standards/uvm" }
+      { t: "doc", label: "Accellera UVM 1.2 / IEEE 1800.2 reference", url: "https://accellera.org/downloads/standards/uvm" },
+      { t: "course", label: "Doulos UVM classes (paid, instructor-led) — the fast lane if employer-funded", url: "https://www.doulos.com" }
     ],
     exercises: [
       "Convert your class-based UART bench to UVM: one agent, one scoreboard, three tests (smoke, random soak, error injection) sharing the env.",
@@ -2607,6 +2608,25 @@ const LIBRARY = [
     { label: "DVCon / Accellera recorded talks", url: "https://dvcon-proceedings.org",
       note: "Verification conference papers and talks — UVM patterns, SVA, coverage methodology from practitioners. → Stage 5" }
   ]
+},
+{
+  cat: "Paid courses & professional training (worth the money)",
+  items: [
+    { label: "Doulos — Verilog / VHDL / SystemVerilog / UVM / Tcl", url: "https://www.doulos.com",
+      note: "The industry benchmark for instructor-led HDL and verification training; also an AMD/Intel authorized training partner. Employers routinely fund it — ask. → Stages 1, 5" },
+    { label: "Kumar Khandagle (Udemy)", url: "https://www.udemy.com/user/kumar-khandagle/",
+      note: "Deep, inexpensive catalog: SystemVerilog verification, UVM, AXI, Vivado — well-reviewed and frequently discounted to coffee money. → Stages 1, 5, 7" },
+    { label: "Udemy FPGA/VHDL tracks (e.g., Jordan Christman)", url: "https://www.udemy.com/topic/fpga/",
+      note: "Practical board-based FPGA courses; check ratings + recency, and wait for the ever-present sale. → Stages 1–3" },
+    { label: "Zero to ASIC Course (Matt Venn) — paid cohort", url: "https://zerotoasiccourse.com",
+      note: "Design your own chip with the open-source flow and actually tape it out. FPGA front-end skills transfer directly. → Stages 2, 9" },
+    { label: "Maven Silicon — VLSI & verification programs", url: "https://www.maven-silicon.com",
+      note: "Structured institute-style RTL design and UVM verification programs with labs and placement focus — popular career-switcher route. → Stages 1, 5" },
+    { label: "Coursera / edX certificate tracks", url: "https://www.coursera.org/specializations/fpga-design",
+      note: "The same courses listed above free-to-audit: pay only if you want graded labs and a certificate for your resume. → Stages 1–3" },
+    { label: "EDA vendor training (Cadence / Siemens / Synopsys)", url: "https://www.cadence.com/en_US/home/training.html",
+      note: "Official tool and methodology courses (UVM, formal, CDC tools) — usually corporate-funded; take them when a job hands you the seat. → Stages 5, 9" }
+  ]
 }
 ];
 
@@ -2664,10 +2684,11 @@ function render() {
 function renderLibrary() {
   const root = $("#library");
   root.innerHTML =
-    `<div class="lib-head"><h2>Bonus: Free Courses &amp; YouTube Hidden Gems</h2>
-       <div class="meta">Zero-cost, high-quality video learning mapped to the stages above</div></div>
+    `<div class="lib-head"><h2>Bonus: Courses &amp; YouTube Hidden Gems</h2>
+       <div class="meta">Free-first video learning mapped to the stages above — plus paid training that earns its price</div></div>
      <p class="lib-intro">Some of the best FPGA teaching ever produced is free on YouTube and open courseware.
-        Pick one channel per stage as your “video companion” — watch, then immediately build.</p>
+        Pick one channel per stage as your “video companion” — watch, then immediately build.
+        Go paid only for structure, graded labs, certificates, or when an employer is paying.</p>
      <div class="lib-grid">` +
     LIBRARY.map(c =>
       `<div class="lib-card"><h3>${esc(c.cat)}</h3><ul>` +
