@@ -30,6 +30,7 @@ A complete zero-to-expert path for FPGA front-end engineering covering **design,
   - **Corner cases & gotchas** (the bugs that bite in the field)
   - **Best practices / SOPs** (how professionals actually work)
 - Topics tagged **core**, **advanced/specialization**, or **optional**
+- **⚡ Fast Track toggle** (Pareto view): spotlights the 13 topics that deliver ~80% of day-one job-readiness — synthesizable SystemVerilog, testbenches, FSMs, STA/constraints, CDC, the async FIFO, AXI, UART/SPI/I2C, ILA debug, and report reading
 - Per-stage milestones ("you're ready to move on when…")
 - Progress tracking with "Mark as done" (persisted in browser localStorage)
 - Light/dark theme aware, mobile responsive, fully self-contained (no external assets)
