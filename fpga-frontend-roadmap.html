@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FPGA Front-End Engineer Roadmap — Zero to Expert</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --ink: #1a1a1a;
+    --muted: #6b7280;
+    --node: #ffe599;
+    --node-border: #2b2b2b;
+    --node-alt: #fff3bf;
+    --chip: #ffec99;
+    --chip-optional: #e9ecef;
+    --chip-adv: #d0ebff;
+    --line: #2b2b2b;
+    --accent: #4263eb;
+    --good: #2b8a3e;
+    --warn: #e8590c;
+    --card: #ffffff;
+    --code-bg: #f1f3f5;
+    --shadow: 0 2px 6px rgba(0,0,0,.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14151a;
+      --ink: #e8e8e8;
+      --muted: #9aa0aa;
+      --node: #8d6e00;
+      --node-border: #e8e8e8;
+      --node-alt: #6b5400;
+      --chip: #7a6300;
+      --chip-optional: #2b2f36;
+      --chip-adv: #1c3d5a;
+      --line: #cfcfcf;
+      --accent: #91a7ff;
+      --good: #69db7c;
+      --warn: #ffa94d;
+      --card: #1e2026;
+      --code-bg: #2a2d35;
+      --shadow: 0 2px 8px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14151a; --ink: #e8e8e8; --muted: #9aa0aa; --node: #8d6e00;
+    --node-border: #e8e8e8; --node-alt: #6b5400; --chip: #7a6300;
+    --chip-optional: #2b2f36; --chip-adv: #1c3d5a; --line: #cfcfcf;
+    --accent: #91a7ff; --good: #69db7c; --warn: #ffa94d; --card: #1e2026;
+    --code-bg: #2a2d35; --shadow: 0 2px 8px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"] {
+    --bg: #f7f7f5; --ink: #1a1a1a; --muted: #6b7280; --node: #ffe599;
+    --node-border: #2b2b2b; --node-alt: #fff3bf; --chip: #ffec99;
+    --chip-optional: #e9ecef; --chip-adv: #d0ebff; --line: #2b2b2b;
+    --accent: #4263eb; --good: #2b8a3e; --warn: #e8590c; --card: #ffffff;
+    --code-bg: #f1f3f5; --shadow: 0 2px 6px rgba(0,0,0,.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  a { color: var(--accent); }
+  code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; font-size: .9em; }
+
+  header.hero {
+    max-width: 900px; margin: 0 auto; padding: 48px 20px 8px; text-align: center;
+  }
+  header.hero h1 { font-size: clamp(1.6rem, 4vw, 2.5rem); letter-spacing: -.02em; }
+  header.hero p.sub { color: var(--muted); margin-top: 10px; font-size: 1.05rem; }
+  .legend {
+    display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;
+    margin: 22px auto 6px; font-size: .85rem; color: var(--muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i {
+    width: 14px; height: 14px; border: 2px solid var(--node-border);
+    border-radius: 4px; display: inline-block;
+  }
+  .legend i.core { background: var(--chip); }
+  .legend i.adv  { background: var(--chip-adv); }
+  .legend i.opt  { background: var(--chip-optional); }
+
+  .howto {
+    max-width: 760px; margin: 10px auto 0; padding: 0 20px;
+    text-align: center; color: var(--muted); font-size: .9rem;
+  }
+
+  /* ---------- Roadmap spine ---------- */
+  .roadmap { max-width: 1080px; margin: 30px auto 80px; padding: 0 16px; position: relative; }
+  .stage { position: relative; padding: 26px 0 34px; }
+  .stage::before {
+    content: ""; position: absolute; left: 50%; top: 0; bottom: 0;
+    border-left: 3px dashed var(--line); transform: translateX(-50%); opacity: .55;
+  }
+  .stage:first-of-type::before { top: 30px; }
+  .stage:last-of-type::before { bottom: auto; height: 40px; }
+
+  .stage-head {
+    position: relative; z-index: 2; margin: 0 auto; width: fit-content; max-width: 92%;
+    background: var(--node); border: 2.5px solid var(--node-border); border-radius: 12px;
+    padding: 12px 26px; text-align: center; box-shadow: var(--shadow); cursor: pointer;
+  }
+  .stage-head:hover { transform: translateY(-1px); }
+  .stage-head h2 { font-size: 1.15rem; letter-spacing: -.01em; }
+  .stage-head .meta { font-size: .78rem; color: var(--ink); opacity: .75; margin-top: 2px; }
+
+  .topics {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px 60px;
+    margin-top: 26px;
+  }
+  .topics .col { display: flex; flex-direction: column; gap: 10px; }
+  .topics .col.left  { align-items: flex-end; }
+  .topics .col.right { align-items: flex-start; }
+
+  .topic {
+    position: relative; background: var(--chip); border: 2px solid var(--node-border);
+    border-radius: 9px; padding: 8px 14px; font-size: .92rem; font-weight: 600;
+    cursor: pointer; box-shadow: var(--shadow); max-width: 100%;
+    transition: transform .08s ease;
+  }
+  .topic:hover { transform: scale(1.03); }
+  .topic.done { opacity: .55; text-decoration: line-through; }
+  .topic.adv { background: var(--chip-adv); }
+  .topic.opt { background: var(--chip-optional); font-weight: 500; }
+  .topic::after {
+    content: ""; position: absolute; top: 50%; width: 46px;
+    border-top: 2px dashed var(--line); opacity: .5;
+  }
+  .col.left  .topic::after { left: 100%; }
+  .col.right .topic::after { right: 100%; }
+
+  @media (max-width: 720px) {
+    .topics { grid-template-columns: 1fr; gap: 10px; }
+    .topics .col.left, .topics .col.right { align-items: stretch; }
+    .topic::after { display: none; }
+    .stage::before { left: 12px; }
+  }
+
+  /* ---------- Detail drawer ---------- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.45);
+    opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 40;
+  }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; height: 100%; width: min(680px, 100%);
+    background: var(--card); z-index: 50; box-shadow: -6px 0 24px rgba(0,0,0,.25);
+    transform: translateX(102%); transition: transform .22s ease; display: flex; flex-direction: column;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head {
+    padding: 18px 22px 14px; border-bottom: 1px solid var(--code-bg);
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .drawer-head h3 { font-size: 1.25rem; flex: 1; }
+  .drawer-head .stage-tag { font-size: .75rem; color: var(--muted); display: block; margin-bottom: 4px; }
+  .drawer-close {
+    background: none; border: 2px solid var(--node-border); border-radius: 8px;
+    font-size: 1rem; padding: 4px 12px; cursor: pointer; color: var(--ink);
+  }
+  .drawer-body { padding: 18px 22px 60px; overflow-y: auto; }
+  .drawer-body section { margin-bottom: 22px; }
+  .drawer-body h4 {
+    font-size: .8rem; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .drawer-body ul { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .drawer-body p.summary { font-size: .98rem; }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill {
+    font-size: .78rem; background: var(--code-bg); border-radius: 999px; padding: 3px 10px;
+  }
+  .res-type {
+    display: inline-block; font-size: .68rem; font-weight: 700; text-transform: uppercase;
+    border-radius: 4px; padding: 1px 6px; margin-right: 6px; background: var(--code-bg); color: var(--muted);
+  }
+  .exercise { border-left: 3px solid var(--good); padding-left: 10px; }
+  .gotcha  { border-left: 3px solid var(--warn); padding-left: 10px; }
+  .mark-done {
+    margin-top: 6px; background: var(--chip); color: var(--ink); border: 2px solid var(--node-border);
+    border-radius: 8px; padding: 6px 14px; font-weight: 600; cursor: pointer;
+  }
+
+  footer {
+    text-align: center; color: var(--muted); font-size: .85rem; padding: 30px 16px 50px;
+  }
+  .progressbar {
+    position: sticky; top: 0; z-index: 30; height: 6px; background: var(--code-bg);
+  }
+  .progressbar > div { height: 100%; width: 0%; background: var(--good); transition: width .3s; }
+</style>
+</head>
+<body>
+<div class="progressbar" title="Topics marked as done"><div id="progressFill"></div></div>
+
+<header class="hero">
+  <h1>FPGA Front-End Engineer</h1>
+  <p class="sub">A zero-to-expert roadmap covering digital design, RTL, verification, validation,
+     timing closure, and professional practice — with references, exercises, corner cases, and SOPs.</p>
+  <div class="legend">
+    <span><i class="core"></i> Core topic</span>
+    <span><i class="adv"></i> Advanced / specialization</span>
+    <span><i class="opt"></i> Optional / good to know</span>
+  </div>
+  <p class="howto">Click any stage or topic to open details: what to learn, curated references,
+     hands-on exercises, corner cases &amp; gotchas, and best practices. Use “Mark as done” to track progress
+     (saved in your browser).</p>
+</header>
+
+<main class="roadmap" id="roadmap"></main>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-modal="true" role="dialog">
+  <div class="drawer-head">
+    <div style="flex:1">
+      <span class="stage-tag" id="dStage"></span>
+      <h3 id="dTitle"></h3>
+    </div>
+    <button class="drawer-close" id="dClose" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body" id="dBody"></div>
+</aside>
+
+<footer>
+  FPGA Front-End Engineer Roadmap · Inspired by the visual style of roadmap.sh ·
+  Progress is stored locally in your browser (localStorage).
+</footer>
+
+<script>
+"use strict";
+
+/* =====================================================================
+   ROADMAP DATA
+   Each stage: { id, title, duration, goal, topics: [...] }
+   Each topic: {
+     id, title, kind: "core"|"adv"|"opt",
+     summary, learn: [], resources: [{t:"book|course|site|video|doc|tool", label, url?}],
+     exercises: [], gotchas: [], practices: []
+   }
+   ===================================================================== */
+const ROADMAP = [
+{
+  id: "s0", title: "Foundations — Digital Logic & Prerequisites", duration: "4–8 weeks",
+  goal: "Build the bedrock every FPGA engineer stands on: binary math, Boolean logic, combinational and sequential circuits, a mental model of how a CPU works, and fluency with Linux/Git. Do not skip this — 80% of RTL bugs trace back to weak digital-logic fundamentals.",
+  milestone: [
+    "You can design a 4-bit ripple-carry adder and a traffic-light FSM on paper (state diagram + truth tables) without tooling.",
+    "You can explain setup/hold time and why a flip-flop can go metastable.",
+    "You are comfortable living in a Linux terminal: navigating, editing, scripting, and using Git branches."
+  ],
+  topics: [
+  {
+    id: "t-numbers", title: "Number systems & binary arithmetic", kind: "core",
+    summary: "Binary, hex, two's complement, signed vs unsigned, overflow, and fixed-point representation — the arithmetic vocabulary of all hardware.",
+    learn: [
+      "Binary/hex/decimal conversion; bit, nibble, byte, word",
+      "Two's complement: negation, sign extension, why it makes add/sub uniform",
+      "Overflow vs carry; detecting signed overflow",
+      "Basics of fixed-point (Qm.n) representation and rounding/truncation",
+      "Gray code and one-hot encodings and where they are used"
+    ],
+    resources: [
+      { t: "book", label: "Harris & Harris — Digital Design and Computer Architecture, Ch. 1", url: "https://www.elsevier.com/books/digital-design-and-computer-architecture/harris/978-0-12-800056-4" },
+      { t: "site", label: "Ben Eater — binary & logic video series", url: "https://eater.net" },
+      { t: "site", label: "Two's complement interactive explainer (Cornell CS)", url: "https://www.cs.cornell.edu/~tomf/notes/cps104/twoscomp.html" }
+    ],
+    exercises: [
+      "By hand: compute 8-bit two's-complement results of 0x7F + 1 and 0x80 - 1; explain the overflow flags.",
+      "Write a table converting 0–15 to binary, Gray code, and one-hot; note the single-bit-change property of Gray code.",
+      "Represent 3.14159 in Q4.12 fixed point; compute the quantization error."
+    ],
+    gotchas: [
+      "Sign extension vs zero extension: mixing them silently corrupts signed arithmetic — the #1 beginner arithmetic bug in RTL.",
+      "In Verilog, an expression's signedness collapses to unsigned if ANY operand is unsigned.",
+      "Carry-out is not the same as signed overflow; use the XOR-of-top-carries rule for signed overflow."
+    ],
+    practices: [
+      "Always annotate bus widths and signedness in design notes (e.g., `s12.4` for signed Q12.4).",
+      "Prefer symmetric rounding decisions made explicitly, never left to accidental truncation."
+    ]
+  },
+  {
+    id: "t-boolean", title: "Boolean algebra & logic gates", kind: "core",
+    summary: "Gates, truth tables, De Morgan, Karnaugh maps, and minimal forms — how logic is expressed and simplified before it becomes LUTs.",
+    learn: [
+      "AND/OR/NOT/NAND/NOR/XOR/XNOR; universal gates",
+      "Boolean identities and De Morgan's theorems",
+      "Sum-of-products / product-of-sums; canonical forms",
+      "Karnaugh maps up to 5 variables; don't-cares",
+      "Hazards: static-1/static-0 glitches and why they matter (and why synchronous design mostly hides them)"
+    ],
+    resources: [
+      { t: "book", label: "Harris & Harris — Ch. 2 (Combinational Logic Design)" },
+      { t: "course", label: "Nand2Tetris Part 1 — build a computer from NAND gates", url: "https://www.nand2tetris.org" },
+      { t: "tool", label: "Logisim Evolution — visual logic simulator", url: "https://github.com/logisim-evolution/logisim-evolution" }
+    ],
+    exercises: [
+      "Minimize F = Σm(1,3,5,7,9,11,13,15) with a K-map, then verify the result is just the LSB input.",
+      "Build a 2-bit magnitude comparator in Logisim from gates only.",
+      "Prove both De Morgan theorems with truth tables, then rewrite a NAND-only implementation of XOR."
+    ],
+    gotchas: [
+      "K-map minimality is about literal count, not necessarily LUT count — FPGA LUTs make many textbook optimizations irrelevant.",
+      "Glitches on combinational outputs are normal; never feed a combinational output to an async control pin (clock, async reset) expecting it to be clean."
+    ],
+    practices: [
+      "Trust the synthesizer for gate-level minimization; spend your effort on clear, correct RTL instead of manual K-maps in real projects."
+    ]
+  },
+  {
+    id: "t-comb-blocks", title: "Combinational building blocks", kind: "core",
+    summary: "Multiplexers, decoders, encoders, adders, comparators, shifters, ALUs — the LEGO bricks of datapaths.",
+    learn: [
+      "Mux/demux, decoder/encoder, priority encoder",
+      "Ripple-carry, carry-lookahead, carry-save adders (concepts; FPGAs give you fast carry chains)",
+      "Barrel shifters and their mux-tree structure",
+      "Building a simple ALU; flags (Z, N, C, V)",
+      "Tri-state logic and why it (mostly) doesn't exist inside modern FPGAs"
+    ],
+    resources: [
+      { t: "book", label: "Harris & Harris — Ch. 5 (Digital Building Blocks)" },
+      { t: "site", label: "HDLBits — Circuits > Combinational Logic problem set", url: "https://hdlbits.01xz.net/wiki/Main_Page" },
+      { t: "site", label: "asic-world combinational examples", url: "http://www.asic-world.com/verilog/veritut.html" }
+    ],
+    exercises: [
+      "Design an 8:1 mux out of 2:1 muxes on paper; count the mux levels (this is exactly what a LUT6 hides).",
+      "Design a 4-bit ALU (add, sub, and, or, xor, slt) with a flags output.",
+      "Design a priority encoder for 8 request lines that also outputs a 'valid' bit; enumerate the corner case of zero requests."
+    ],
+    gotchas: [
+      "Internal tri-states are emulated with muxes on FPGA — writing `z` inside a design creates surprise logic; keep tri-state only at top-level pads.",
+      "Priority encoders synthesize into long logic chains; if timing hurts, ask whether you really need priority or just one-hot arbitration."
+    ],
+    practices: [
+      "Name intermediate signals after their meaning (`grant_onehot`, `sum_carry`), not their structure (`w1`, `n3`)."
+    ]
+  },
+  {
+    id: "t-seq", title: "Sequential logic: latches, flip-flops, counters", kind: "core",
+    summary: "The flip-flop is the atom of synchronous design. Understand latches vs flops, clocking, setup/hold, and simple sequential machines.",
+    learn: [
+      "SR latch, D latch, D flip-flop: level vs edge sensitivity",
+      "Setup time, hold time, clock-to-Q, metastability (conceptual level)",
+      "Synchronous vs asynchronous set/reset",
+      "Counters: binary, Gray, ring, Johnson; loadable and up/down variants",
+      "Shift registers and LFSRs",
+      "The synchronous design paradigm: one clock edge, registered outputs"
+    ],
+    resources: [
+      { t: "book", label: "Harris & Harris — Ch. 3 (Sequential Logic Design)" },
+      { t: "video", label: "Ben Eater — D latch / D flip-flop breadboard series", url: "https://eater.net" },
+      { t: "site", label: "ZipCPU — 'Rules for new FPGA designers'", url: "https://zipcpu.com/blog/2017/08/21/rules-for-newbies.html" }
+    ],
+    exercises: [
+      "Draw the timing diagram of a D-FF with async reset released near a clock edge; mark the dangerous window.",
+      "Design a mod-10 (BCD) counter with synchronous load and enable on paper.",
+      "Design a 4-bit LFSR (x^4 + x^3 + 1); list its sequence and show why the all-zeros state is a lockup state."
+    ],
+    gotchas: [
+      "A latch is inferred any time a combinational `always` block doesn't assign every output on every path — the classic unintended-latch bug.",
+      "Async reset release must be synchronized to the clock (reset recovery/removal timing) or flops can go metastable at startup.",
+      "Maximal-length LFSRs never reach all-zeros — initialize to a nonzero seed or you generate a constant 0."
+    ],
+    practices: [
+      "Adopt 'everything is a D flip-flop plus combinational input logic' as your mental model — JK/T flops are historical trivia in FPGA work.",
+      "Decide a reset strategy per project (sync vs async-assert/sync-release) and apply it uniformly."
+    ]
+  },
+  {
+    id: "t-arch", title: "Computer architecture basics", kind: "core",
+    summary: "Know what a CPU, memory hierarchy, and bus are — FPGAs constantly interface with processors, and datapath/control thinking comes from here.",
+    learn: [
+      "Instruction set basics (RISC-V or MIPS): fetch/decode/execute",
+      "Single-cycle vs pipelined datapaths; hazards at a conceptual level",
+      "Memory: SRAM vs DRAM vs flash; memory maps; endianness",
+      "Memory-mapped I/O and what a 'register interface' means",
+      "Throughput vs latency vocabulary"
+    ],
+    resources: [
+      { t: "book", label: "Harris & Harris — Ch. 6–8 (Architecture & Microarchitecture)" },
+      { t: "course", label: "MIT 6.004 Computation Structures (OCW)", url: "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/" },
+      { t: "site", label: "RISC-V ISA specifications", url: "https://riscv.org/technical/specifications/" }
+    ],
+    exercises: [
+      "Trace one RISC-V `add` and one `lw` instruction through a single-cycle datapath diagram by hand.",
+      "Write out a memory map for an imaginary peripheral: 4 registers, their offsets, and read/write behavior.",
+      "Explain (in writing) the difference between little- and big-endian storage of 0x12345678 at address 0."
+    ],
+    gotchas: [
+      "Endianness bites hardest at HW/SW boundaries: a register that software reads byte-wise may look 'reversed' from the RTL view.",
+      "Read-to-clear and write-1-to-clear register semantics are common; document them or software teams will fight ghosts."
+    ],
+    practices: [
+      "Every design with a CPU interface deserves a register map document written before the RTL."
+    ]
+  },
+  {
+    id: "t-linux", title: "Linux, Git & scripting", kind: "core",
+    summary: "FPGA tooling lives on the command line. Shell fluency, Git discipline, and a scripting language (Python + Tcl) are daily tools.",
+    learn: [
+      "Shell survival: pipes, grep/sed/awk, environment, Makefiles",
+      "Git: branching, rebasing, .gitignore for HDL projects, submodules for IP",
+      "Python for tooling: file parsing, generating test vectors, matplotlib for waveforms/data",
+      "Tcl basics — Vivado, Quartus, and most EDA tools are Tcl-driven",
+      "Editor proficiency (VS Code / Vim) with HDL plugins and linters"
+    ],
+    resources: [
+      { t: "site", label: "The Missing Semester of Your CS Education (MIT)", url: "https://missing.csail.mit.edu/" },
+      { t: "site", label: "Pro Git book (free)", url: "https://git-scm.com/book/en/v2" },
+      { t: "doc", label: "Tcl Tutorial (tcl.tk)", url: "https://www.tcl-lang.org/man/tcl8.5/tutorial/tcltutorial.html" }
+    ],
+    exercises: [
+      "Write a Makefile that compiles and runs an Icarus Verilog simulation with `make sim` and opens GTKWave with `make waves`.",
+      "Write a Python script that generates a sine-wave lookup table as a Verilog `$readmemh` file.",
+      "Create a Git repo for an HDL project with a sensible .gitignore (exclude tool journals, checkpoints, build outputs)."
+    ],
+    gotchas: [
+      "Never commit Vivado project directories wholesale — regenerate projects from Tcl scripts; checked-in `.xpr` trees cause merge hell.",
+      "EDA tool versions matter: record the exact tool version in the repo (a `tool_version.txt` or the build script)."
+    ],
+    practices: [
+      "Scriptable, reproducible builds from day one: if a new laptop can't rebuild the bitstream from a fresh clone with one command, the project is broken.",
+      "Commit early, commit small, write commit messages that say WHY."
+    ]
+  },
+  {
+    id: "t-electronics", title: "Basic electronics & CMOS (good to know)", kind: "opt",
+    summary: "Enough circuits knowledge to read schematics, understand I/O standards, and not be scared of a datasheet.",
+    learn: [
+      "Ohm's law, RC charging, pull-up/pull-down resistors",
+      "CMOS inverter operation; why power = CV²f (dynamic) + leakage",
+      "Logic levels: LVCMOS, LVDS at a glance; input thresholds",
+      "Reading a schematic: decoupling caps, series termination, level shifters",
+      "What ESD, ground bounce, and crosstalk mean at board level"
+    ],
+    resources: [
+      { t: "book", label: "Sedra/Smith or 'The Art of Electronics' (Horowitz & Hill) — selected chapters" },
+      { t: "video", label: "Ben Eater electronics fundamentals", url: "https://eater.net" }
+    ],
+    exercises: [
+      "Compute the RC time constant of a 10k pull-up with 20pF of trace capacitance; relate it to max I2C speed.",
+      "Read a dev-board schematic (e.g., Digilent Basys 3) and find: the clock source, the configuration flash, and one level-shifted interface."
+    ],
+    gotchas: [
+      "An FPGA I/O bank has one VCCIO — you cannot mix 3.3V and 1.8V standards in the same bank.",
+      "Unconnected inputs float; floating inputs oscillate and burn power. Tie or configure pulls."
+    ],
+    practices: [
+      "Always skim the dev-board reference manual and schematic before writing pin constraints."
+    ]
+  }
+  ]
+},
+{
+  id: "s1", title: "HDL Fundamentals — RTL Design with Verilog/SystemVerilog", duration: "6–10 weeks",
+  goal: "Learn to describe hardware, not write software. Master the synthesizable subset of SystemVerilog, simulate everything you write, and internalize the golden rule: think in circuits first, code second.",
+  milestone: [
+    "You have solved 120+ HDLBits problems including the FSM sections.",
+    "For any RTL you write, you can sketch the schematic it should synthesize to.",
+    "You write a self-checking testbench by reflex for every module."
+  ],
+  topics: [
+  {
+    id: "t-sv-design", title: "Verilog / SystemVerilog design subset", kind: "core",
+    summary: "The synthesizable core of the language: modules, always blocks, operators, and data types — plus the discipline to use only what maps to hardware.",
+    learn: [
+      "Modules, ports, instantiation; `logic` type; packed vs unpacked arrays",
+      "`always_comb`, `always_ff`, `always_latch` and why they beat plain `always`",
+      "Blocking (`=`) vs non-blocking (`<=`) assignments — and the simulation event model behind them",
+      "Operators: reduction, concatenation, replication, part-select `[i +: W]`",
+      "Parameters, localparams, typedef/enum/struct (packed) for readable RTL",
+      "The synthesizable subset boundary: what `initial`, delays, and `#` mean for FPGA vs simulation"
+    ],
+    resources: [
+      { t: "site", label: "HDLBits — interactive Verilog problems with instant feedback", url: "https://hdlbits.01xz.net/wiki/Main_Page" },
+      { t: "book", label: "Pong Chu — FPGA Prototyping by SystemVerilog Examples", url: "https://www.wiley.com/en-us/FPGA+Prototyping+by+SystemVerilog+Examples-p-9781119282662" },
+      { t: "site", label: "ChipVerify SystemVerilog tutorial", url: "https://www.chipverify.com/systemverilog/systemverilog-tutorial" },
+      { t: "paper", label: "Cummings — 'Nonblocking Assignments in Verilog Synthesis, Coding Styles That Kill!' (SNUG)", url: "http://www.sunburst-design.com/papers/CummingsSNUG2000SJ_NBA.pdf" },
+      { t: "tool", label: "EDA Playground — run simulations in the browser", url: "https://www.edaplayground.com" }
+    ],
+    exercises: [
+      "Complete HDLBits sections: Basics, Vectors, Modules, Procedures (aim for 100%).",
+      "Write a parameterized N-bit gray-code counter with enable; verify against a Python model.",
+      "Deliberately write a mux with a missing else branch, run synthesis, and observe the inferred latch warning — then fix it three ways (else, default assignment, unique case)."
+    ],
+    gotchas: [
+      "Golden rule: `<=` in clocked blocks, `=` in combinational blocks. Mixing them creates race conditions and sim/synth mismatch.",
+      "Incomplete sensitivity lists are UB in old Verilog — `always_comb` fixes this; never write `always @(a or b)` style again.",
+      "Multiple drivers on one signal: legal-looking code, X in simulation, error (or worse, silent resolution) in synthesis.",
+      "`casex`/wildcard matching can match X in simulation and hide bugs — prefer `case` + `unique`/`priority` or `case inside`."
+    ],
+    practices: [
+      "One module = one file = one clearly stated function; module name matches file name.",
+      "Registered outputs by default; document any combinational output in the module header.",
+      "Run a linter (Verilator `--lint-only`, Verible) on every file before simulation."
+    ]
+  },
+  {
+    id: "t-vhdl", title: "VHDL (read + basic write)", kind: "opt",
+    summary: "Europe, defense, aerospace, and much legacy IP speak VHDL. You need at least reading fluency; some jobs require full fluency.",
+    learn: [
+      "Entities/architectures, processes, signals vs variables",
+      "std_logic / std_logic_vector, numeric_std (signed/unsigned) — and why std_logic_arith is banned",
+      "Sequential vs concurrent statements; delta cycles",
+      "Generics and generate; records for bundles",
+      "Mixed-language projects: instantiating VHDL in SV and vice versa"
+    ],
+    resources: [
+      { t: "site", label: "Nandland VHDL tutorials (with videos)", url: "https://nandland.com/learn-vhdl/" },
+      { t: "book", label: "Pong Chu — FPGA Prototyping by VHDL Examples" },
+      { t: "tool", label: "GHDL — open-source VHDL simulator", url: "https://ghdl.github.io/ghdl/" }
+    ],
+    exercises: [
+      "Port three of your Verilog HDLBits solutions (mux, counter, FSM) to VHDL and simulate with GHDL.",
+      "Take an OpenCores VHDL UART and write down its port map and FSM structure from reading alone."
+    ],
+    gotchas: [
+      "Signals update after the process suspends (delta cycle); variables update immediately — the VHDL twin of blocking/non-blocking confusion.",
+      "Don't use shared libraries `std_logic_arith`/`std_logic_unsigned`; `numeric_std` is the standard."
+    ],
+    practices: [
+      "Pick ONE primary language for a project; mixed-language is fine at IP boundaries but painful inside a subsystem."
+    ]
+  },
+  {
+    id: "t-rtl-synth", title: "RTL coding for synthesis", kind: "core",
+    summary: "Learn to predict the hardware your code produces: adders, muxes, RAMs, and registers — and to avoid constructs that simulate but don't synthesize.",
+    learn: [
+      "What infers a register, a latch, a mux, a priority chain, a RAM, a ROM",
+      "Coding patterns for BRAM inference (sync read!) vs distributed RAM (async read)",
+      "Reset styles and their hardware cost; initial values vs reset on FPGA",
+      "Replication, resource sharing, and how `if/else if` differs from `case`",
+      "Sim/synth mismatch sources: delays, X-handling, initial blocks, `translate_off` abuse"
+    ],
+    resources: [
+      { t: "paper", label: "Sunburst Design papers index (Cummings) — synthesis coding styles", url: "http://www.sunburst-design.com/papers/" },
+      { t: "doc", label: "AMD UG901 — Vivado Synthesis Guide (HDL coding & inference templates)", url: "https://docs.amd.com/r/en-US/ug901-vivado-synthesis" },
+      { t: "site", label: "ZipCPU blog — practical RTL lessons", url: "https://zipcpu.com" }
+    ],
+    exercises: [
+      "Write RTL for: single-port RAM, simple-dual-port RAM, true-dual-port RAM; synthesize and confirm BRAM inference in the utilization report.",
+      "Code the same 4:1 selection as if/else-if and as case; compare synthesized structures (priority chain vs parallel mux).",
+      "Write a ROM initialized from a hex file with `$readmemh` and confirm it maps to BRAM."
+    ],
+    gotchas: [
+      "Asynchronous-read memories cannot map to BRAM — one missing register turns a 36Kb BRAM into thousands of LUTs (a silent utilization bomb).",
+      "Resetting a large RAM or a shift register prevents efficient mapping; only reset what functionally needs reset.",
+      "An `initial` value on a register IS synthesizable on most FPGAs (GSR) — but is NOT portable to ASIC; know which world you're in."
+    ],
+    practices: [
+      "Read the post-synthesis utilization report for every new block: LUTs, FFs, BRAM, DSP should match your mental estimate within ~20%.",
+      "Keep a personal 'inference cookbook' of code → hardware patterns for your tool version."
+    ]
+  },
+  {
+    id: "t-fsm", title: "Finite state machines in RTL", kind: "core",
+    summary: "FSMs are the control backbone of every design. Master the two-process style, encoding choices, and safe-state thinking.",
+    learn: [
+      "Moore vs Mealy; when each is appropriate",
+      "Coding styles: one/two/three-process FSMs; registered outputs",
+      "State encoding: binary, one-hot, Gray; letting the tool re-encode",
+      "Illegal/unreachable state recovery; default transitions",
+      "FSM decomposition: datapath + control separation; handshakes between FSMs"
+    ],
+    resources: [
+      { t: "paper", label: "Cummings — 'FSM Coding Styles' (SNUG papers)", url: "http://www.sunburst-design.com/papers/" },
+      { t: "site", label: "HDLBits — Finite State Machines section", url: "https://hdlbits.01xz.net/wiki/Main_Page" }
+    ],
+    exercises: [
+      "Design a UART transmitter FSM: idle → start → 8 data bits → stop; simulate with a baud-rate generator.",
+      "Design a memory-controller-style FSM with wait-states and a timeout counter; add a recovery path from an illegal state.",
+      "Take a Mealy FSM and convert it to Moore; compare latency and output glitching."
+    ],
+    gotchas: [
+      "One-hot FSMs hit undefined states if a bit flips (SEU) — add `default: state <= IDLE;` and consider hamming-distance concerns in safety designs.",
+      "Mealy outputs are combinational functions of inputs — they glitch and create long paths; register them at the boundary if they leave the module.",
+      "Synthesis tools may re-encode your FSM (e.g., to one-hot) — your simulation state values may not match hardware; use enum names, not magic numbers, when debugging."
+    ],
+    practices: [
+      "Use `typedef enum` for states; never raw localparam integers.",
+      "Draw the state diagram BEFORE coding; keep the drawing in the repo next to the RTL.",
+      "Separate next-state logic, state register, and output logic for readability in nontrivial FSMs."
+    ]
+  },
+  {
+    id: "t-tb-basics", title: "Testbench basics & self-checking simulation", kind: "core",
+    summary: "If you didn't simulate it, it doesn't work. Learn stimulus generation, checking, and the habit of self-checking benches from day one.",
+    learn: [
+      "Testbench structure: clock/reset generation, DUT instantiation, stimulus, checking",
+      "`initial` blocks, tasks, functions; `$display`/`$error`/`$fatal`",
+      "Self-checking: golden vectors, reference models, scoreboard-lite",
+      "Waveform dumping (`$dumpfile`/VCD/FST) and reading waveforms efficiently",
+      "Simple randomization with `$urandom`; seeding for reproducibility"
+    ],
+    resources: [
+      { t: "site", label: "ChipVerify — Verilog testbench tutorials", url: "https://www.chipverify.com/verilog/verilog-testbench" },
+      { t: "book", label: "Bergeron — Writing Testbenches (concepts hold up)" },
+      { t: "tool", label: "GTKWave / Surfer waveform viewers", url: "https://gtkwave.sourceforge.net" }
+    ],
+    exercises: [
+      "Write a self-checking TB for your gray-code counter that PROVES successive outputs differ by exactly one bit for all 2^N codes.",
+      "Write a task-based TB for the UART TX that decodes the serial line in the TB and compares against sent bytes.",
+      "Introduce an off-by-one bug in a FIFO pointer and confirm your TB actually catches it (mutation testing mindset)."
+    ],
+    gotchas: [
+      "A testbench that only prints waveforms is not a test — if there's no automatic PASS/FAIL, regressions are impossible.",
+      "Driving DUT inputs on the same edge the DUT samples them creates races; drive on the opposite edge or use a small skew.",
+      "Forgetting `$fatal`/non-zero exit on failure means your future CI will happily report green forever."
+    ],
+    practices: [
+      "Every module ships with its testbench in the same commit — no exceptions.",
+      "Print the random seed at simulation start; make every failure reproducible with one command.",
+      "End every simulation with an unmissable `TEST PASSED` / `TEST FAILED` summary line."
+    ]
+  },
+  {
+    id: "t-sim-tools", title: "Simulators & debugging workflow", kind: "core",
+    summary: "Get fast and fluent with at least one open-source and one vendor simulator, and build a keyboard-speed edit-compile-debug loop.",
+    learn: [
+      "Icarus Verilog + GTKWave: the zero-cost starter kit",
+      "Verilator: compiled simulation, C++/SystemC harnesses, lint mode",
+      "Vendor sims: Vivado XSIM / Questa basics; when you need them (IP models, SV features)",
+      "Command-line driven sims with Makefiles; batch vs GUI",
+      "Debug technique: binary-search in time, tracing X's backward, assertion-first debugging"
+    ],
+    resources: [
+      { t: "tool", label: "Icarus Verilog", url: "https://steveicarus.github.io/iverilog/" },
+      { t: "tool", label: "Verilator manual", url: "https://verilator.org/guide/latest/" },
+      { t: "site", label: "ZipCPU — 'Debugging strategies' posts", url: "https://zipcpu.com" }
+    ],
+    exercises: [
+      "Set up one repo where `make sim TOP=xyz` runs any module's TB under Icarus and `make lint` runs Verilator lint on everything.",
+      "Port one testbench to a Verilator C++ harness and measure the speedup on a long simulation.",
+      "Practice X-tracing: simulate a design with an uninitialized register, watch X propagate, and find the origin from the waveform alone."
+    ],
+    gotchas: [
+      "Verilator is 2-state by default (no X/Z) — bugs that hide behind X-optimism in 4-state sims can behave differently; know your simulator's semantics.",
+      "Free simulators lag on SystemVerilog verification features (classes, constraints); design code is fine, UVM is not."
+    ],
+    practices: [
+      "Optimize your inner loop: a sub-10-second recompile+rerun for unit TBs pays for itself hundreds of times.",
+      "Save/commit waveform viewer session files (signal groupings) alongside testbenches for faster future debug."
+    ]
+  },
+  {
+    id: "t-param", title: "Parameterization & generate", kind: "core",
+    summary: "Write RTL once, reuse everywhere: parameters, generate loops, and packages turn modules into libraries.",
+    learn: [
+      "Parameter propagation and validation (elaboration-time checks)",
+      "`generate` for/if/case; genvar scoping; hierarchical names of generated instances",
+      "Packages for shared types/constants/functions; `import` discipline",
+      "Functions for derived parameters (e.g., `$clog2`)",
+      "Interfaces (design-side) and modports as bundled port-lists (use judiciously)"
+    ],
+    resources: [
+      { t: "site", label: "ChipVerify — generate blocks", url: "https://www.chipverify.com/verilog/verilog-generate-block" },
+      { t: "doc", label: "IEEE 1800 LRM — the actual reference (learn to navigate it)", url: "https://ieeexplore.ieee.org/document/10458102" }
+    ],
+    exercises: [
+      "Build a parameterized synchronous FIFO (DEPTH, WIDTH) with `$clog2`-derived pointer widths and full/empty/almost-full flags; verify exhaustively for DEPTH=4.",
+      "Build a parameterized round-robin arbiter for N requesters using generate.",
+      "Create a package with your project's common types (e.g., an AXI-lite struct) and refactor two modules to use it."
+    ],
+    gotchas: [
+      "`$clog2(1)` is 0 — a DEPTH=1 FIFO needs special-casing; always test parameter extremes (1, non-power-of-2, max).",
+      "Elaboration-time parameter errors surface as cryptic tool messages; add explicit `if (WIDTH < 1) $fatal(...)` guards (or `$error` in an elaboration check).",
+      "SystemVerilog interfaces in design code can hurt tool portability and make netlist debug harder; some teams ban them in RTL — know your team's rules."
+    ],
+    practices: [
+      "Every reusable module gets a parameter table in its header comment: name, legal range, default, meaning.",
+      "Test parameterized modules at MULTIPLE parameter values in regression, not just the default."
+    ]
+  }
+  ]
+},
+{
+  id: "s2", title: "FPGA Architecture — Know Your Silicon", duration: "3–5 weeks",
+  goal: "Understand what's physically inside an FPGA — LUTs, flip-flops, block RAM, DSP slices, clock networks, I/O — so your RTL maps onto real resources instead of fighting them. Get a dev board and stop being tool-shy.",
+  milestone: [
+    "Given a utilization report you can say which resources are tight and why.",
+    "You can explain how a 6-input LUT implements any 6-input function and what a carry chain is for.",
+    "You've blinked an LED — from your own RTL, your own constraints, your own bitstream."
+  ],
+  topics: [
+  {
+    id: "t-fabric", title: "LUTs, flip-flops & the routing fabric", kind: "core",
+    summary: "The programmable fabric: LUTs as truth-table memories, the register-rich slice/ALM structure, carry chains, and the routing that connects it all.",
+    learn: [
+      "LUT-as-SRAM truth table; LUT6 fracturing into 2×LUT5",
+      "Slices/CLBs (AMD) vs ALMs (Intel); FF availability per LUT",
+      "Dedicated carry chains and why adders are cheap and fast",
+      "Routing: switch matrices, interconnect delay dominating logic delay",
+      "Utilization metrics: why 80%+ LUT usage makes timing closure hard"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG474 — 7 Series CLB User Guide", url: "https://docs.amd.com/v/u/en-US/ug474_7Series_CLB" },
+      { t: "doc", label: "Intel device handbooks — ALM architecture chapters", url: "https://www.intel.com/content/www/us/en/products/programmable.html" },
+      { t: "paper", label: "Kuon & Rose — 'Measuring the Gap Between FPGAs and ASICs'", url: "https://ieeexplore.ieee.org/document/4068926" }
+    ],
+    exercises: [
+      "Synthesize an 8-input AND, a 64-input AND, and a 32-bit adder; open the schematic/netlist view and identify LUTs vs carry chains used.",
+      "Estimate LUT count for a 32:1 mux by hand, then check against the tool.",
+      "Open the device floorplan view of your dev-board part and locate: a CLB column, BRAM columns, DSP columns, the config center."
+    ],
+    gotchas: [
+      "Logic levels ≠ delay on FPGA: two LUTs far apart can be slower than five adjacent ones — routing dominates.",
+      "The synthesis LUT count can drop after place-and-route (further packing) or rise (replication for timing); compare like with like."
+    ],
+    practices: [
+      "Keep a resource budget spreadsheet per project from day one; update at every milestone."
+    ]
+  },
+  {
+    id: "t-bram", title: "Block RAM & distributed RAM", kind: "core",
+    summary: "On-chip memory is your scarcest resource after routing. Learn BRAM modes, widths, output registers, and the inference rules cold.",
+    learn: [
+      "BRAM geometry: 18Kb/36Kb blocks, aspect ratios, byte-write enables",
+      "Modes: single-port, simple-dual, true-dual; read-first/write-first/no-change",
+      "Output register: the latency-vs-Fmax tradeoff",
+      "Distributed (LUT) RAM: async read, small/shallow use cases",
+      "UltraRAM / M20K and cascading for big buffers; FIFO hard macros",
+      "ECC support in BRAM and when to enable it"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG573 — UltraScale Memory Resources", url: "https://docs.amd.com/v/u/en-US/ug573-ultrascale-memory-resources" },
+      { t: "doc", label: "AMD UG901 — RAM HDL inference templates", url: "https://docs.amd.com/r/en-US/ug901-vivado-synthesis" },
+      { t: "site", label: "Project F — 'FPGA memory' articles", url: "https://projectf.io" }
+    ],
+    exercises: [
+      "Implement a 4KB circular buffer using one true-dual-port BRAM with independent read/write clocks; verify with a TB.",
+      "Measure Fmax of a BRAM read path with and without the output register enabled.",
+      "Write the three write-mode behaviors (read-first/write-first/no-change) as RTL, simulate a same-address read+write collision in each, and tabulate results."
+    ],
+    gotchas: [
+      "Read-during-write to the SAME address on DIFFERENT ports of a TDP BRAM returns undefined data on real silicon even if simulation looks fine — design around it or constrain the addressing.",
+      "A BRAM inferred without its output register loses ~30–50% of achievable frequency; make latency a conscious choice.",
+      "Asymmetric-width ports have endianness/word-ordering subtleties — simulate against the vendor BRAM model, not just your idealized RTL model."
+    ],
+    practices: [
+      "Prefer inference with documented templates over direct primitive instantiation; instantiate primitives only when inference can't express the mode.",
+      "Explicitly comment expected mapping (`// maps to 1x RAMB36, TDP, read-first`) so drift is caught in review."
+    ]
+  },
+  {
+    id: "t-dsp", title: "DSP slices & arithmetic resources", kind: "core",
+    summary: "Hard multiply-accumulate blocks (DSP48/DSP58, variable-precision DSP) give you GHz-class math — if you code so the tool can use them.",
+    learn: [
+      "DSP slice anatomy: pre-adder, multiplier, ALU, pattern detector, cascade paths",
+      "Pipeline registers (A/B/M/P) and why full pipelining is needed for speed",
+      "Inference patterns for mult, MACC, and pre-add structures",
+      "Width limits (e.g., 27×18) and how wide multipliers decompose",
+      "When to use DSPs for non-math: wide counters, barrel shifts, pattern match"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG579 — UltraScale DSP48E2 User Guide", url: "https://docs.amd.com/v/u/en-US/ug579-ultrascale-dsp" },
+      { t: "doc", label: "AMD UG901 — DSP inference (mult/MACC templates)", url: "https://docs.amd.com/r/en-US/ug901-vivado-synthesis" }
+    ],
+    exercises: [
+      "Write a fully pipelined 16×16 multiplier and confirm it maps to one DSP with all pipeline stages used (check the timing report).",
+      "Build a MACC (multiply-accumulate) and verify DSP-internal accumulation (no fabric adder).",
+      "Implement a 40-tap FIR with one DSP in a time-multiplexed loop, then a parallel version; compare DSP count and throughput."
+    ],
+    gotchas: [
+      "An unpipelined multiplier may be placed in fabric or run at half the frequency — missing M/P registers is the classic cause of DSP timing failures.",
+      "Signed/unsigned mixing forces the tool to add fabric logic around the DSP; keep operands consistently signed.",
+      "Inferred DSP rounding is truncation unless you code convergent rounding explicitly."
+    ],
+    practices: [
+      "Match your pipeline registers to the DSP's register stages (typically 3–4 for full speed); write it as plain registered RTL and let the tool absorb them.",
+      "Track DSP utilization separately — DSP-heavy designs run out of DSP columns long before LUTs."
+    ]
+  },
+  {
+    id: "t-clocking", title: "Clocking resources: PLL/MMCM & clock networks", kind: "core",
+    summary: "Global clock trees, PLLs/MMCMs for synthesis of new frequencies and phases, clock enables vs gated clocks — clocking discipline starts here.",
+    learn: [
+      "Global clock buffers (BUFG) and low-skew distribution trees",
+      "MMCM/PLL: multiply/divide, phase shift, jitter filtering; lock signals",
+      "Regional/IO clocks; clock-capable pins and why clocks need them",
+      "Clock enables as the FPGA-correct alternative to gated clocks",
+      "BUFGMUX/glitchless clock muxing; safe clock switching",
+      "Counting clock resources: how many clocks is too many"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG472 — 7 Series Clocking Resources", url: "https://docs.amd.com/v/u/en-US/ug472_7Series_Clocking" },
+      { t: "site", label: "ZipCPU on clocks and CDC", url: "https://zipcpu.com/blog/2017/10/20/cdc.html" }
+    ],
+    exercises: [
+      "Instantiate an MMCM to derive 100 MHz, 25 MHz, and a 90°-shifted 25 MHz from your board oscillator; bring each out to a LED divider.",
+      "Design a pulse-every-N 'tick' generator with a clock enable instead of a divided clock; explain in a comment why this is better.",
+      "Hold logic in reset until MMCM `locked` asserts; demonstrate what happens if you don't (in simulation with a late-locking model)."
+    ],
+    gotchas: [
+      "A divided clock made from a fabric flip-flop output is a recipe for skew disasters — derive clocks in the MMCM or use clock enables.",
+      "MMCM outputs are not aligned to the input until `locked`; using the clock earlier gives you undefined behavior at startup.",
+      "Driving a clock from a non-clock-capable pin forces local routing with huge skew — the tool warns; never ignore that warning."
+    ],
+    practices: [
+      "Design rule: ONE master clock domain per subsystem where possible; every additional domain must justify itself.",
+      "Name clocks and their nets consistently (`clk_100m`, `clk_axi_250m`) and keep a clock tree diagram in the docs."
+    ]
+  },
+  {
+    id: "t-io", title: "I/O blocks, standards & pin planning", kind: "core",
+    summary: "The IOB: programmable standards, drive/slew, input/output registers, IDDR/ODDR, delay lines — and the pin-planning process that makes boards work.",
+    learn: [
+      "I/O standards: LVCMOS/LVTTL, LVDS, SSTL/POD (memory); bank VCCIO rules",
+      "IOB registers and why I/O timing wants them packed into the pad",
+      "IDDR/ODDR, ISERDES/OSERDES basics; input delay (IDELAY) calibration",
+      "Pull-ups/downs, keeper, tristate control from fabric",
+      "Pin planning workflow with the board team; SSO/simultaneous-switching limits",
+      "Unused pin policy and configuration bank voltage"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG471 — 7 Series SelectIO Resources", url: "https://docs.amd.com/v/u/en-US/ug471_7Series_SelectIO" },
+      { t: "doc", label: "Your dev board's reference manual + master XDC (Digilent)", url: "https://digilent.com/reference/" }
+    ],
+    exercises: [
+      "Write the complete XDC for your dev board's buttons, switches, LEDs, and UART from the schematic (don't copy the master file first; then diff against it).",
+      "Use an ODDR to forward a clock to an output pin; explain why you can't just route the clock net to the pad.",
+      "Configure one differential LVDS output pair and check the placement rules the tool enforces."
+    ],
+    gotchas: [
+      "All pins in a bank share VCCIO — a single 3.3V requirement in an otherwise 1.8V bank is a board respin, not a constraint tweak. Catch it in pin-planning review.",
+      "Missing IOSTANDARD constraints fail bitstream generation (or default dangerously on old flows).",
+      "Forgetting the `PULLUP` on an open-drain input (I2C!) costs a lab day."
+    ],
+    practices: [
+      "Pin assignments are a contract with the PCB: version them, review them with the hardware engineer, and run the tool's pin-planning DRC before board tape-out.",
+      "Register I/O signals in the IOB (`IOB=TRUE`) for repeatable pad timing on synchronous interfaces."
+    ]
+  },
+  {
+    id: "t-vendors", title: "Vendor landscape & choosing parts", kind: "core",
+    summary: "AMD (Xilinx), Intel (Altera), Lattice, Microchip — families, sweet spots, toolchains, and how to read a device selection guide.",
+    learn: [
+      "AMD: Spartan/Artix/Kintex/Virtex, Zynq SoC, Versal ACAP; Vivado/Vitis",
+      "Intel: Cyclone/Arria/Stratix/Agilex; Quartus",
+      "Lattice iCE40/ECP5/CertusPro (low power, open-source friendly); Microchip PolarFire (low power, rad-tolerant)",
+      "Reading a selection guide: logic cells, BRAM, DSP, transceiver count/speed, package/pinout migration",
+      "Cost/availability/longevity considerations; speed grades and temperature ranges"
+    ],
+    resources: [
+      { t: "doc", label: "AMD device selection guides", url: "https://www.amd.com/en/products/adaptive-socs-and-fpgas.html" },
+      { t: "doc", label: "Lattice product pages (iCE40/ECP5)", url: "https://www.latticesemi.com" },
+      { t: "site", label: "Digilent / iCEBreaker / Tang Nano — hobby board ecosystems", url: "https://digilent.com" }
+    ],
+    exercises: [
+      "Pick a hypothetical product (e.g., 4-camera vision box) and shortlist a device from two vendors; justify with a resource/transceiver/cost table.",
+      "Map the equivalent of an Artix-7 35T in Intel and Lattice catalogs."
+    ],
+    gotchas: [
+      "'Logic elements' are counted differently per vendor (LE vs LUT6 vs ALM) — never compare raw numbers across vendors.",
+      "Speed grade and temperature grade drastically change both timing closure and price; nail them early."
+    ],
+    practices: [
+      "Prototype on a family with an easy upgrade path (same package, bigger die) so late resource growth doesn't force a board respin."
+    ]
+  },
+  {
+    id: "t-config", title: "Configuration, bitstreams & boot", kind: "core",
+    summary: "How the FPGA gets its personality: JTAG, SPI flash, configuration modes, multiboot/fallback, and what happens between power-on and 'done'.",
+    learn: [
+      "Configuration sources: JTAG, master/slave SPI, SelectMAP, processor-driven",
+      "The DONE/INIT pins, CRC checking, startup sequence (GSR, GTS release)",
+      "Bitstream compression, encryption, authentication (overview here; security stage later)",
+      "Multiboot / golden image fallback for field updates",
+      "SoC boot: FSBL → bitstream → application (Zynq-style) overview"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG470 — 7 Series Configuration User Guide", url: "https://docs.amd.com/v/u/en-US/ug470_7Series_Config" },
+      { t: "site", label: "OpenFPGALoader — open-source programming tool", url: "https://github.com/trabucayre/openFPGALoader" }
+    ],
+    exercises: [
+      "Program your board via JTAG, then via SPI flash; measure and explain the boot-time difference.",
+      "Set up a multiboot image pair (golden + update) and demonstrate fallback by corrupting the update image.",
+      "Read out and decode the IDCODE of your device via JTAG."
+    ],
+    gotchas: [
+      "All flops wake up in their INIT state after configuration — code that relies on a reset that never comes still 'works'… until the day it doesn't. Understand GSR.",
+      "Configuration voltage/mode pins (M[2:0], pull-ups on DONE) are board-level traps; a wrong strap means a board that never boots.",
+      "A field update that bricks the config flash without a golden fallback is a product recall — design the update story before shipping."
+    ],
+    practices: [
+      "Automate bitstream generation with versioned metadata baked into a USR_ACCESS register or a version ROM readable by software.",
+      "Always verify flash after programming in production flows."
+    ]
+  },
+  {
+    id: "t-opensource-arch", title: "Open-source FPGA stack (explore)", kind: "opt",
+    summary: "Yosys, nextpnr, and fully documented parts (iCE40/ECP5) let you see inside the whole flow — the best architecture teacher there is.",
+    learn: [
+      "Yosys synthesis: reading its netlists, `show` diagrams, `stat` reports",
+      "nextpnr place-and-route with a GUI you can watch",
+      "Project IceStorm / Trellis: reverse-engineered bitstream docs",
+      "Amaranth / Chisel / SpinalHDL — modern HDL generators (awareness level)"
+    ],
+    resources: [
+      { t: "tool", label: "Yosys", url: "https://yosyshq.net/yosys/" },
+      { t: "tool", label: "nextpnr", url: "https://github.com/YosysHQ/nextpnr" },
+      { t: "site", label: "iCEBreaker FPGA board + examples", url: "https://icebreaker-fpga.org" },
+      { t: "site", label: "F4PGA / open FPGA tooling umbrella", url: "https://f4pga.org" }
+    ],
+    exercises: [
+      "Take your UART through yosys+nextpnr to an iCE40 (or simulate the flow) and inspect the mapped netlist with `yosys show`.",
+      "Watch nextpnr's GUI place your design; identify the critical path it reports."
+    ],
+    gotchas: [
+      "Open flows target a subset of devices; don't extrapolate QoR (quality of results) conclusions to Vivado/Quartus on big parts."
+    ],
+    practices: [
+      "Use the open stack as a microscope for learning even if production work stays on vendor tools."
+    ]
+  }
+  ]
+},
+{
+  id: "s3", title: "The FPGA Design Flow — Synthesis to Bitstream", duration: "4–6 weeks",
+  goal: "Own the full flow: synthesis, implementation, constraints, reports, and scripting. Move from clicking GUI buttons to reproducible, scripted, reviewable builds — the difference between a hobbyist and a professional.",
+  milestone: [
+    "Your project builds from a clean clone with one script, GUI never opened.",
+    "You can read timing/utilization/DRC reports and act on them.",
+    "You know what each flow stage (synth → opt → place → route → bitstream) does and what can go wrong in each."
+  ],
+  topics: [
+  {
+    id: "t-synthesis", title: "Synthesis: RTL → netlist", kind: "core",
+    summary: "What the synthesizer actually does: elaboration, inference, optimization, technology mapping — and how to read what it tells you.",
+    learn: [
+      "Elaboration vs synthesis; generics resolved, hierarchy built",
+      "Inference and mapping to primitives (LUT, FF, BRAM, DSP)",
+      "Optimizations: constant propagation, register removal, FSM re-encoding, retiming",
+      "Synthesis attributes/pragmas: `keep`, `dont_touch`, `ram_style`, `use_dsp`, `max_fanout`, `async_reg`",
+      "Hierarchy: flatten vs preserve; out-of-context (OOC) synthesis",
+      "Reading the synthesis log like a pro: warnings that matter (latch, multi-driver, width mismatch, unconnected)"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG901 — Vivado Synthesis", url: "https://docs.amd.com/r/en-US/ug901-vivado-synthesis" },
+      { t: "doc", label: "AMD UG949 — UltraFast Design Methodology Guide (read cover to cover over this stage)", url: "https://docs.amd.com/r/en-US/ug949-vivado-design-methodology" }
+    ],
+    exercises: [
+      "Create a 'warning zoo': write small files that each trigger a classic warning (inferred latch, multi-driven net, truncated width, unused signal), and learn each message's exact wording.",
+      "Mark a redundant register `dont_touch` and show the utilization difference vs letting the tool merge it.",
+      "Compare `ram_style = \"block\"` vs `\"distributed\"` on a 64-entry memory; inspect both mappings."
+    ],
+    gotchas: [
+      "Synthesis silently trims logic with undriven/unused paths — a 'passing' build with half your design optimized away is a constraint or connection bug, not success. Check the trimmed-logic report.",
+      "`translate_off` regions hiding functional code cause sim/synth mismatch — simulation-only code belongs in testbenches, not design files.",
+      "Register init values + reset conflicts: some tools warn, some silently prefer one; be explicit."
+    ],
+    practices: [
+      "Institute a zero-new-warnings policy with a waiver file for reviewed exceptions — warning debt compounds like interest.",
+      "Skim the full synthesis log at least once per major block; grep is not review."
+    ]
+  },
+  {
+    id: "t-impl", title: "Implementation: place, route, bitstream", kind: "core",
+    summary: "Placement and routing turn a netlist into configured silicon. Learn the sub-steps, the reports, and the knobs — and when NOT to touch the knobs.",
+    learn: [
+      "Flow stages: opt_design, place_design, phys_opt, route_design; what each fixes",
+      "Placement quality: congestion maps, pblocks/floorplanning basics",
+      "Router behavior: hold fixing, long-route detours; unroutable designs",
+      "Implementation strategies/directives; multi-strategy exploration",
+      "DRC checks and bitstream generation; write_checkpoint discipline",
+      "Incremental compile and its limits"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG904 — Vivado Implementation", url: "https://docs.amd.com/r/en-US/ug904-vivado-implementation" },
+      { t: "doc", label: "UG949 — timing closure chapters", url: "https://docs.amd.com/r/en-US/ug949-vivado-design-methodology" }
+    ],
+    exercises: [
+      "Run the same design through 3 implementation strategies; tabulate WNS/TNS/runtime and see how much 'free' variance exists.",
+      "Deliberately overconstrain a design (2× the achievable clock), then walk the post-route timing report: identify the critical path cell delays vs net delays split.",
+      "Draw a pblock around a block and observe placement changes in the device view."
+    ],
+    gotchas: [
+      "A design that meets timing in synthesis estimates can fail badly after route — only post-route timing is real.",
+      "High LUT utilization (>80%) or BRAM/DSP column pressure causes congestion failures that no strategy fixes — the fix is architectural.",
+      "Hold violations after routing usually indicate CDC/constraint errors, not router weakness — investigate before adding delays."
+    ],
+    practices: [
+      "Archive the implementation checkpoint (.dcp) and all reports for every released bitstream — you WILL need to autopsy a shipped build.",
+      "Fix the worst path by understanding it, not by rerunning with different seeds until it passes (seed-lottery builds are unreproducible)."
+    ]
+  },
+  {
+    id: "t-constraints", title: "Constraints files: XDC / SDC", kind: "core",
+    summary: "Constraints tell the tools what 'correct' means: clocks, I/O timing, placement, and exceptions. Wrong constraints = silently broken hardware.",
+    learn: [
+      "XDC/SDC structure and ordering; constraints are Tcl, evaluated in sequence",
+      "`create_clock`, `create_generated_clock`, clock groups",
+      "I/O constraints: `set_input_delay`/`set_output_delay`, and physical pin/IOSTANDARD",
+      "Exceptions: `set_false_path`, `set_multicycle_path`, `set_max_delay` (with `-datapath_only`)",
+      "Scoped constraints for IP; constraint files per purpose (pins vs timing)",
+      "Querying the design: `get_ports`, `get_pins`, `get_cells`, `get_clocks` and wildcards"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG903 — Using Constraints", url: "https://docs.amd.com/r/en-US/ug903-vivado-using-constraints" },
+      { t: "doc", label: "AMD UG945 — Timing constraints wizard tutorial", url: "https://docs.amd.com" }
+    ],
+    exercises: [
+      "Write constraints from scratch for your board: master clock, UART I/O delays vs a virtual clock, false path on the async reset button.",
+      "Use `report_clocks` and `report_clock_interaction` to verify every clock is constrained and every crossing is either safe or excepted.",
+      "Break a design intentionally with a wrong `set_false_path` on a real synchronous path; observe that it 'passes timing' and reflect on how you'd catch it in review."
+    ],
+    gotchas: [
+      "Every `set_false_path` is a signed statement that YOU verified the path can't cause failure — a wrong exception passes timing and fails in the field, intermittently, at temperature. The worst bug class in FPGA.",
+      "Forgetting `create_generated_clock` on a forwarded/divided clock leaves entire domains unanalyzed.",
+      "Wildcards that match nothing fail silently in some flows — use `report_exceptions` / check 'constraint not applied' warnings."
+    ],
+    practices: [
+      "Constraint review is code review: exceptions require a comment citing WHY the path is safe, and a second engineer's sign-off.",
+      "Keep `report_clock_interaction` clean: no red (unconstrained/unsafe) entries in a releasable build."
+    ]
+  },
+  {
+    id: "t-vivado", title: "Vivado deep-dive (or your primary tool)", kind: "core",
+    summary: "Whichever vendor you use, go deep on one tool: project vs non-project mode, the GUI's analysis views, and the Tcl console beneath everything.",
+    learn: [
+      "Project mode vs non-project (batch) mode; when each fits",
+      "Device/netlist/schematic views for analysis and debug",
+      "Report suite: report_timing_summary, report_utilization, report_cdc, report_drc, report_power",
+      "Journal/log files (`vivado.jou`) as a Tcl-learning goldmine",
+      "IP catalog basics, board files, and managing generated products"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG892 — Vivado Design Flows Overview", url: "https://docs.amd.com/r/en-US/ug892-vivado-design-flows-overview" },
+      { t: "doc", label: "AMD UG835 — Tcl Command Reference", url: "https://docs.amd.com/r/en-US/ug835-vivado-tcl-commands" },
+      { t: "video", label: "Adam Taylor's MicroZed Chronicles (blog series)", url: "https://www.adiuvoengineering.com/microzed-chronicles" }
+    ],
+    exercises: [
+      "Do one full project in the GUI while reading `vivado.jou`; then reproduce the identical flow as a standalone Tcl script.",
+      "Use the schematic viewer to trace a signal from an input pin through logic to an output pin in a small design.",
+      "Generate and read all five key reports on a real design; write a one-paragraph 'health summary' as if for a design review."
+    ],
+    gotchas: [
+      "GUI-clicked settings that never make it into scripts are how 'works on my machine' bitstreams happen.",
+      "IP output products checked into Git (instead of the .xci + regeneration) bloat repos and break upgrades."
+    ],
+    practices: [
+      "Non-project Tcl flow (or a locked project-generation script) for anything shared or shipped.",
+      "Learn 10 Tcl one-liners by heart (find paths, count cells, highlight objects) — they turn hours of clicking into seconds."
+    ]
+  },
+  {
+    id: "t-tcl", title: "Tcl scripting & build automation", kind: "core",
+    summary: "Scripted flows: checkpointed builds, report generation, parameter sweeps, and hooks — the automation layer of professional FPGA work.",
+    learn: [
+      "Tcl fundamentals: lists, dicts, procs, error handling",
+      "Vivado object model: getting/filtering/iterating design objects",
+      "Build script structure: synth → checkpoint → impl → reports → bitstream, with exit codes",
+      "Pre/post-step hook scripts; message severity manipulation (carefully)",
+      "Makefile/CMake or Python (Edalize, fusesoc) wrappers around tool Tcl"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG894 — Using Tcl Scripting", url: "https://docs.amd.com/r/en-US/ug894-vivado-tcl-scripting" },
+      { t: "tool", label: "FuseSoC — HDL package/build manager", url: "https://github.com/olofk/fusesoc" }
+    ],
+    exercises: [
+      "Write a batch build script that fails the build (non-zero exit) on any timing violation or critical warning, and emits a one-page summary.",
+      "Script a two-parameter sweep (e.g., FIFO depth × pipeline stages) that builds each variant OOC and collects Fmax into a CSV.",
+      "Write a Tcl proc that lists the 10 highest-fanout nets in a routed design."
+    ],
+    gotchas: [
+      "Downgrading message severity to make builds 'clean' is lying to yourself — waive individually, never globally.",
+      "Tcl string/list quoting bugs cause constraints to silently apply to nothing; always verify object counts (`llength [get_cells ...]`)."
+    ],
+    practices: [
+      "The build script IS documentation: a new engineer should learn your flow by reading it.",
+      "Fail loud, fail early: check `$?`/return codes at every stage; a build that limps to a broken bitstream wastes lab time."
+    ]
+  },
+  {
+    id: "t-ip", title: "IP cores & system integration", kind: "core",
+    summary: "Real designs are mostly integration: vendor IP (FIFOs, clock wizards, memory controllers), third-party cores, and your own reusable blocks.",
+    learn: [
+      "Using the IP catalog: configuration, generated products, upgrade flow",
+      "Block design / IP Integrator (or Platform Designer) vs pure HDL top-levels",
+      "IP packaging: turning your module into a reusable, versioned IP",
+      "Third-party/open cores: OpenCores, LiteX ecosystem; evaluating quality",
+      "Managing IP versions across tool upgrades; .xci/.bd in version control"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG896 — Designing with IP", url: "https://docs.amd.com/r/en-US/ug896-vivado-ip" },
+      { t: "site", label: "LiteX — open-source SoC builder ecosystem", url: "https://github.com/enjoy-digital/litex" },
+      { t: "site", label: "OpenCores", url: "https://opencores.org" }
+    ],
+    exercises: [
+      "Build the same FIFO three ways: your RTL, XPM macro (`xpm_fifo_sync`), and IP catalog FIFO generator; compare resources, latency, and integration friction.",
+      "Package one of your modules as Vivado IP with proper AXI interface inference and version metadata; instantiate it in a block design.",
+      "Audit one OpenCores module: does it have a testbench? constraints? documented CDC? Write a 5-line adoption verdict."
+    ],
+    gotchas: [
+      "Vendor IP upgrades across tool versions can change behavior and ports — pin tool versions per release branch and re-verify after upgrades.",
+      "Block-design auto-connection magic (address assignment, clock association) hides errors; always review the generated address map and clock domains.",
+      "Unmaintained third-party cores with no testbench cost more than writing your own — evaluate before adopting."
+    ],
+    practices: [
+      "Wrap vendor IP behind your own thin RTL interface so swapping vendors/IP versions touches one file.",
+      "Treat XPM macros as first choice for FIFOs/CDC/memory on AMD parts — they're constraint-aware and portable across devices."
+    ]
+  },
+  {
+    id: "t-reports", title: "Report triage & QoR analysis", kind: "core",
+    summary: "Tools produce thousands of lines of reports. Professionals extract the five numbers that matter and know the healthy ranges.",
+    learn: [
+      "Timing: WNS/TNS/WHS/THS — definitions and healthy values",
+      "Utilization: LUT/FF/BRAM/DSP/IO percentages and pressure thresholds",
+      "Congestion levels and what they predict",
+      "Power report basics: static vs dynamic, toggle-rate assumptions",
+      "Methodology checks (report_methodology/TIMING-*, XDC-* checks) as a pre-review gate"
+    ],
+    resources: [
+      { t: "doc", label: "UG906 — Design Analysis and Closure Techniques", url: "https://docs.amd.com/r/en-US/ug906-vivado-design-analysis" }
+    ],
+    exercises: [
+      "Build a 'QoR dashboard' script that extracts WNS/TNS/utilization from reports of every build into a trend CSV.",
+      "Take a failing-timing design and classify its 10 worst paths: logic-limited, route-limited, or constraint-error. Propose one fix for each class.",
+      "Run report_methodology on your design and fix or formally waive every finding."
+    ],
+    gotchas: [
+      "WNS = 0.001ns 'passes' but has zero margin — process/voltage/temperature variation and next week's ECO will kill it. Target real margin (e.g., 5% of period).",
+      "Power estimates with default toggle rates are fiction; feed SAIF from simulation for numbers that matter."
+    ],
+    practices: [
+      "Trend QoR across commits — a 5% utilization jump from a 'small change' is a review flag.",
+      "Set explicit QoR gates for release: WNS ≥ margin, zero critical warnings, zero unwaived methodology violations."
+    ]
+  },
+  {
+    id: "t-quartus", title: "Second toolchain: Quartus (or Vivado if Intel-primary)", kind: "opt",
+    summary: "Portability thinking: knowing a second vendor's flow reveals which of your habits are principles and which are tool quirks.",
+    learn: [
+      "Quartus project structure (.qsf), Platform Designer, Timing Analyzer (SDC-native)",
+      "Terminology mapping: MMCM↔PLL, BUFG↔global clock, XDC↔SDC, ILA↔SignalTap",
+      "Vendor-portable RTL patterns vs vendor-locked primitives/XPMs"
+    ],
+    resources: [
+      { t: "doc", label: "Intel Quartus Prime user guides", url: "https://www.intel.com/content/www/us/en/support/programmable/support-resources/design-software/user-guides.html" }
+    ],
+    exercises: [
+      "Port your UART + FIFO project to the other vendor's flow: rewrite constraints in SDC, re-run timing, note every friction point in a portability journal."
+    ],
+    gotchas: [
+      "Inference templates differ subtly (e.g., byte-enable RAM styles) — a portable-looking RTL file can map to BRAM on one tool and LUTs on the other."
+    ],
+    practices: [
+      "Isolate vendor-specific code (primitives, macros) into clearly named wrapper modules (`*_xilinx.sv`, `*_intel.sv`)."
+    ]
+  }
+  ]
+},
+{
+  id: "s4", title: "Timing, CDC & Reset — Where Real Engineers Are Made", duration: "6–8 weeks",
+  goal: "Static timing analysis, clock-domain crossing, metastability, and reset architecture separate professionals from hobbyists. Designs that fail here work on the bench and die in the field. Go slow; get this right.",
+  milestone: [
+    "You can compute setup/hold slack by hand from a timing report path.",
+    "You can design and constrain an async FIFO and defend every constraint in review.",
+    "report_cdc on your designs is clean, and you can explain every waiver."
+  ],
+  topics: [
+  {
+    id: "t-sta", title: "Static timing analysis fundamentals", kind: "core",
+    summary: "The math of synchronous timing: launch/capture edges, setup and hold checks, slack, clock skew, jitter, and pessimism — the model behind every timing report.",
+    learn: [
+      "Setup check: Tclk ≥ Tcko + Tlogic + Trouting + Tsetup − Tskew (+ margins); derive it, don't memorize it",
+      "Hold check and why it's frequency-independent",
+      "Slack, WNS/TNS; critical path anatomy: cell delay vs net delay",
+      "Clock skew, jitter, and uncertainty; multi-corner analysis (slow/fast)",
+      "Recovery/removal checks for async resets",
+      "Reading a full timing path report line by line"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG906 — Timing Analysis chapters", url: "https://docs.amd.com/r/en-US/ug906-vivado-design-analysis" },
+      { t: "book", label: "'Static Timing Analysis for Nanometer Designs' — Bhasker & Chadha (ASIC-oriented but the definitive text)" },
+      { t: "site", label: "TimingAnalyzer articles on ZipCPU & Project F timing posts", url: "https://projectf.io/posts/" }
+    ],
+    exercises: [
+      "Hand-compute max frequency for: Tcko=0.5ns, 3 LUT levels ×0.6ns, routing 1.8ns, Tsu=0.4ns, skew 0. Check against a tool report of a similar path.",
+      "Take one failing path report and annotate every line: launch clock edge, each cell/net delay, capture edge, uncertainty, slack.",
+      "Sweep the clock constraint on one design from easy to impossible in 5 steps; plot achieved WNS and observe the tool 'giving up' behavior."
+    ],
+    gotchas: [
+      "Hold violations are worse than setup violations: setup fails at speed, hold fails at ANY speed — a hold-violating bitstream is dead silicon.",
+      "Timing is analyzed per corner; a path can pass slow-corner setup and fail fast-corner hold.",
+      "The tool only analyzes what's constrained: 'no failing paths' on an unconstrained design means nothing. Check `check_timing` for unconstrained endpoints first."
+    ],
+    practices: [
+      "`check_timing` and `report_clock_interaction` clean BEFORE reading timing summary — analysis coverage precedes analysis results.",
+      "Keep clock uncertainty margins explicit and reviewed, not silently defaulted."
+    ]
+  },
+  {
+    id: "t-cdc", title: "Clock domain crossing (CDC)", kind: "core",
+    summary: "Moving signals between asynchronous clocks safely: synchronizers, handshakes, and the CDC structures every reviewer looks for. The most common source of 'works for a week then glitches' failures.",
+    learn: [
+      "Why CDC fails: metastability, data incoherence (multi-bit skew), pulse swallowing, reconvergence",
+      "2-FF (and 3-FF) synchronizer for single bits; ASYNC_REG attribute",
+      "Multi-bit strategies: Gray-coded pointers, handshake (req/ack), MCP (multi-cycle path) formulation, async FIFO",
+      "Pulse/toggle synchronizers for events; fast→slow pulse stretching",
+      "Quasi-static signals and when a plain synchronizer suffices",
+      "CDC verification: report_cdc, structural CDC tools (Questa CDC/SpyGlass) concepts"
+    ],
+    resources: [
+      { t: "paper", label: "Cummings — 'Clock Domain Crossing (CDC) Design & Verification Techniques Using SystemVerilog' (SNUG 2008) — THE paper; read it twice", url: "http://www.sunburst-design.com/papers/CummingsSNUG2008Boston_CDC.pdf" },
+      { t: "site", label: "ZipCPU — CDC series", url: "https://zipcpu.com/blog/2017/10/20/cdc.html" },
+      { t: "doc", label: "AMD XPM_CDC macros documentation (UG974)", url: "https://docs.amd.com/r/en-US/ug974-vivado-ultrascale-libraries" }
+    ],
+    exercises: [
+      "Build and simulate the failure: pass an 8-bit counter directly across clock domains, sample it in the other domain, and log the torn/incoherent values your TB catches.",
+      "Implement a toggle-based pulse synchronizer that works both fast→slow and slow→fast; write a TB sweeping clock ratio from 1:10 to 10:1.",
+      "Implement a req/ack handshake for an 8-bit datum crossing; prove with assertions that data is stable while req is asserted.",
+      "Run report_cdc on a design with a deliberate raw crossing and learn the exact violation signature."
+    ],
+    gotchas: [
+      "A 2-FF synchronizer makes ONE bit safe; putting one on each bit of a bus is NOT a bus synchronizer — skew tears multi-bit values apart. This is the classic CDC interview question and the classic field failure.",
+      "Synchronizer flops must be placed close together (ASYNC_REG=TRUE does this) and excluded from retiming/SRL inference.",
+      "Simulation almost never shows CDC bugs — RTL sim has no metastability. Zero failing sims ≠ CDC-safe. Only structural analysis + correct constraints prove it.",
+      "Reconvergence: two separately synchronized bits recombined downstream can arrive in different cycles — another silent data corruptor."
+    ],
+    practices: [
+      "Use ONLY approved CDC structures from a team library (or XPM_CDC); ad-hoc crossings are banned in reviewed code.",
+      "Every crossing is documented: source domain, destination domain, structure used, constraint applied.",
+      "CDC sign-off (clean report_cdc or dedicated tool) is a mandatory release gate, same rank as timing closure."
+    ]
+  },
+  {
+    id: "t-meta", title: "Metastability — the physics of failure", kind: "core",
+    summary: "What actually happens when you violate setup/hold: the bistable's balance point, resolution time, and MTBF math you can defend to a review board.",
+    learn: [
+      "Flip-flop as a bistable element; the metastable balance point",
+      "Resolution time constant τ and the exponential settling model",
+      "MTBF = e^(tr/τ) / (T0 · fclk · fdata): compute it, understand each term",
+      "Why 2-FF sync multiplies resolution time; when 3 FFs are warranted (high freq, wide temp)",
+      "Synchronizer characterization data in vendor docs"
+    ],
+    resources: [
+      { t: "paper", label: "Ginosar — 'Fourteen Ways to Fool Your Synchronizer' (ASYNC 2003)", url: "https://webee.technion.ac.il/~ran/papers/Sync_Errors_Feb03.pdf" },
+      { t: "paper", label: "Altera/Intel & Xilinx metastability white papers (search 'metastability MTBF')" }
+    ],
+    exercises: [
+      "Compute MTBF for a 1-FF vs 2-FF synchronizer at 250 MHz with vendor-typical τ and T0; express results in human units (seconds vs ages of the universe).",
+      "Write a short memo (1 page) justifying a synchronizer choice for a hypothetical product with 10-year field life and 100k units — this is a real professional artifact."
+    ],
+    gotchas: [
+      "MTBF scales with BOTH clock and data toggle frequency — a synchronizer fine at low data rates can be marginal when the data toggles every cycle.",
+      "Metastability cannot be eliminated, only made astronomically improbable; anyone claiming 'immune' designs is selling something."
+    ],
+    practices: [
+      "For every synchronizer in a product, someone must be able to state its MTBF and assumptions on request — bake it into the CDC documentation."
+    ]
+  },
+  {
+    id: "t-reset", title: "Reset architecture", kind: "core",
+    summary: "Sync vs async reset, reset domains, reset distribution and release sequencing — a whole-chip architectural decision usually made badly by default.",
+    learn: [
+      "Async assert / sync release (the standard FPGA-safe pattern); reset synchronizers",
+      "Sync-only reset and 'no reset' (GSR/init-value reliant) styles; tradeoffs",
+      "Reset recovery/removal timing checks",
+      "Reset domains & sequencing: power-on, PLL lock, external reset, soft reset",
+      "Reset fanout: pipelining/replication of reset nets; why reset can be your critical path",
+      "What actually needs reset: control yes, datapath usually no"
+    ],
+    resources: [
+      { t: "paper", label: "Cummings — 'Asynchronous & Synchronous Reset Design Techniques' (SNUG 2003)", url: "http://www.sunburst-design.com/papers/CummingsSNUG2003Boston_Resets.pdf" },
+      { t: "site", label: "Xilinx white paper WP272 'Get Smart About Reset'", url: "https://docs.amd.com/v/u/en-US/wp272" }
+    ],
+    exercises: [
+      "Build a reset controller: external button (debounced, synchronized) + PLL lock → sequenced sync-release resets for two clock domains; simulate the release ordering.",
+      "Take one of your designs and delete resets from all datapath registers (keep control); verify function unchanged and compare utilization/timing.",
+      "Simulate an async reset released within the recovery window of a flop model and observe the hazard."
+    ],
+    gotchas: [
+      "Asynchronously RELEASING reset near a clock edge sends flops metastable — release must be synchronized per domain. This detail is the whole reason 'async assert, sync release' exists.",
+      "Resetting everything 'to be safe' adds enormous routing load, blocks SRL/BRAM inference, and can make reset the critical path.",
+      "A soft reset that doesn't quiesce interfaces (mid-AXI-transaction) leaves the system wedged — reset protocol state machines to a safe drain state."
+    ],
+    practices: [
+      "One documented reset scheme per project: sources, domains, sequencing diagram, and per-module rules.",
+      "Reset synchronizer per clock domain, from a common asynchronous source; never cross a synchronized reset into another domain."
+    ]
+  },
+  {
+    id: "t-asyncfifo", title: "The asynchronous FIFO (rite of passage)", kind: "core",
+    summary: "The canonical CDC structure: Gray-coded pointers, synchronized comparisons, and conservative flags. Build it, verify it, be able to whiteboard it forever.",
+    learn: [
+      "Architecture: dual-port RAM + write/read pointers + cross-synchronized Gray pointers",
+      "Why Gray code: single-bit change makes synchronized pointer values 'stale but coherent'",
+      "Full/empty generation; why flags are pessimistic and why that's safe",
+      "Almost-full/programmable thresholds; pointer-width +1 trick for full detection",
+      "Depth sizing from rate mismatch and burst math"
+    ],
+    resources: [
+      { t: "paper", label: "Cummings — 'Simulation and Synthesis Techniques for Asynchronous FIFO Design' (SNUG 2002) — the canonical reference", url: "http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf" },
+      { t: "site", label: "ZipCPU — 'Crossing clock domains with an async FIFO'", url: "https://zipcpu.com/blog/2018/07/06/afifo.html" }
+    ],
+    exercises: [
+      "Implement the Cummings-style async FIFO from the paper WITHOUT copying code; verify with a TB that sweeps write:read clock ratios (10:1 … 1:10) and randomizes stalls, checking data integrity and flag correctness.",
+      "Add programmable almost-full and prove (assertion) it asserts at least N-cycles-worth before overflow under worst-case sync latency.",
+      "Size a FIFO on paper: 100 MHz × 64-bit bursty writer (max burst 256 beats, min gap 1µs) into an 80 MHz × 64-bit reader — show your math, then validate in simulation."
+    ],
+    gotchas: [
+      "Comparing binary (not Gray) pointers across domains, or converting Gray→binary before synchronizing, reintroduces the multi-bit tearing the Gray code existed to prevent.",
+      "Flags are computed from a STALE synchronized pointer — 'full' is conservative by design; treating sim-observed extra headroom as guaranteed capacity is a field bug.",
+      "The RAM crossing itself needs a `set_max_delay -datapath_only` (or vendor macro handles it); pointer sync alone is not the whole constraint story."
+    ],
+    practices: [
+      "In production prefer proven macros (XPM_FIFO_ASYNC etc.) — but only AFTER you've built one, so you can debug and constrain what you instantiate.",
+      "FIFO depth rationale documented next to the parameter — 'DEPTH=512 // burst 256 + sync slack 16 + margin' beats a bare number."
+    ]
+  },
+  {
+    id: "t-closure", title: "Timing closure techniques", kind: "core",
+    summary: "The systematic craft of making designs meet timing: pipelining, fanout control, restructuring, floorplanning — in the right order, for the right reasons.",
+    learn: [
+      "Closure methodology: fix constraints first, then synthesis-level issues, then placement, then routing",
+      "Pipelining: adding stages, latency bookkeeping, valid-signal pipelines",
+      "High-fanout nets: replication, register duplication, max_fanout",
+      "Logic restructuring: balancing trees, early-select muxes, one-hot decoding",
+      "Retiming and phys_opt; when tools move registers for you",
+      "SLR/die crossings and floorplanning on large parts (awareness)"
+    ],
+    resources: [
+      { t: "doc", label: "UG949 — Timing Closure chapter + timing closure flowchart", url: "https://docs.amd.com/r/en-US/ug949-vivado-design-methodology" },
+      { t: "site", label: "Project F — 'FPGA timing' series", url: "https://projectf.io" }
+    ],
+    exercises: [
+      "Take a combinational 32-bit multiplier-accumulator failing at 300 MHz; close timing by pipelining while keeping a cycle-accurate TB passing (latency-parameterized checker).",
+      "Find the highest-fanout net in one of your designs; replicate its driver manually and measure the WNS change.",
+      "Write a 'closure log' for one hard path: hypothesis → change → result, iterated three times. (This habit is the actual skill.)"
+    ],
+    gotchas: [
+      "Fixing the #1 path often just reveals path #2 at nearly the same slack — look at the slack HISTOGRAM, not just WNS, to judge how far you really are.",
+      "Pipelining control loops (things with feedback) is fundamentally different from pipelining feed-forward datapaths — a loop's iteration bound can make target Fmax mathematically impossible; recognize this before burning weeks.",
+      "Floorplanning too early locks in a bad placement; it's a last resort on most mid-size designs, not a first move."
+    ],
+    practices: [
+      "Design FOR timing from the start: know your target Fmax and logic-level budget per stage (e.g., ≤4 LUT levels at 250 MHz on -2 speed grade) while writing RTL.",
+      "One change per iteration when closing timing; parallel shotgun changes destroy causality."
+    ]
+  },
+  {
+    id: "t-lowlevel-pipe", title: "Latency, throughput & handshake design", kind: "core",
+    summary: "Valid/ready handshakes, backpressure, skid buffers, and pipeline control — the plumbing discipline that makes blocks composable at speed.",
+    learn: [
+      "Valid/ready semantics (AXI-Stream rules); no combinational valid→ready→valid loops",
+      "Skid buffers / register slices: breaking ready timing paths correctly",
+      "Bubble insertion, throughput accounting, initiation interval",
+      "Elastic pipelines vs rigid (fixed-latency) pipelines; when each wins",
+      "Backpressure propagation and deadlock thinking"
+    ],
+    resources: [
+      { t: "site", label: "ZipCPU — 'Understanding AXI stream / skid buffers'", url: "https://zipcpu.com/blog/2019/05/22/skidbuffer.html" },
+      { t: "doc", label: "ARM AMBA AXI-Stream Protocol Specification (IHI0051)", url: "https://developer.arm.com/documentation/ihi0051/latest" }
+    ],
+    exercises: [
+      "Implement a skid buffer (full-throughput register slice) and prove with assertions: no data drop, no duplication, no combinational ready path.",
+      "Chain 4 processing stages with valid/ready; inject random stalls at the sink and prove end-to-end data integrity with a scoreboard.",
+      "Break the AXI-Stream rule 'valid must not wait for ready' deliberately in a sim with a same-rule-abiding partner and demonstrate the deadlock."
+    ],
+    gotchas: [
+      "'Valid must not depend on ready' — violating this creates deadlocks that appear only against certain partners; it works in your TB and hangs against real IP.",
+      "Dropping valid mid-transfer (before ready) violates the protocol and corrupts streams; once asserted, hold until accepted.",
+      "A ready signal combinationally rippling through N stages becomes the critical path of the whole chip — that's what register slices are for."
+    ],
+    practices: [
+      "Standardize ONE internal streaming handshake (usually AXI-Stream subset) across the whole project; adapters live only at the edges.",
+      "Keep per-block latency and throughput documented in the module header; integration math depends on it."
+    ]
+  }
+  ]
+},
+{
+  id: "s5", title: "Verification — Prove It Works", duration: "8–12 weeks",
+  goal: "Verification is 60–70% of front-end effort and where most careers deepen. Move from ad-hoc testbenches to planned, coverage-driven, constrained-random, assertion-rich verification — UVM for teams, cocotb/formal as force multipliers.",
+  milestone: [
+    "You can write a verification plan that a peer could execute.",
+    "You've built one UVM environment end-to-end and one formal proof of a nontrivial property.",
+    "Coverage closure is something you've DONE, not read about."
+  ],
+  topics: [
+  {
+    id: "t-vplan", title: "Verification planning & TB architecture", kind: "core",
+    summary: "Before code: what could fail, what must be proven, and how the bench is structured. The verification plan is the contract; coverage is the receipt.",
+    learn: [
+      "Feature extraction from spec → verification plan (features × scenarios × checks × coverage)",
+      "Directed vs constrained-random vs formal: choosing per feature",
+      "Testbench architecture: driver/monitor/scoreboard/checker separation (pre-UVM, concepts first)",
+      "Reference models: transaction-level golden models (often Python/C)",
+      "Bug tracking discipline: every escape gets a root-cause and a plan hole analysis"
+    ],
+    resources: [
+      { t: "book", label: "Bergeron — Writing Testbenches: Functional Verification of HDL Models" },
+      { t: "site", label: "Verification Academy — 'Evolving Verification Capabilities' courses (free registration)", url: "https://verificationacademy.com" }
+    ],
+    exercises: [
+      "Write a full verification plan for your async FIFO: 20+ line items with feature, stimulus, check, and coverage columns.",
+      "For one plan line ('full flag asserts correctly'), implement all three ways — directed test, random with cover, formal property — and compare effort/confidence.",
+      "Retrospective: pick a bug you shipped past a TB, and write the plan line that would have caught it."
+    ],
+    gotchas: [
+      "Testing what the RTL does instead of what the SPEC says — a scoreboard cloned from DUT internals verifies nothing. Reference models must derive from the spec.",
+      "The unwritten scenario is always the escape: reset mid-burst, back-to-back with zero gap, simultaneous full+write. Plan explicitly for boundary/collision cases.",
+      "A plan without checks is a stimulus wishlist — every line needs 'how will failure be DETECTED?'"
+    ],
+    practices: [
+      "Verification plan is reviewed by design AND verification before major TB work starts.",
+      "The plan is a living document tied to coverage results — dead plans that never meet the coverage report are theater."
+    ]
+  },
+  {
+    id: "t-sv-verif", title: "SystemVerilog for verification (OOP)", kind: "core",
+    summary: "Classes, randomization, interfaces, clocking blocks, mailboxes — the language layer that testbenches (and all of UVM) are built from.",
+    learn: [
+      "Classes, inheritance, polymorphism, virtual methods; handles vs objects",
+      "Randomization: `rand`, constraints, `randomize() with`, distribution weights",
+      "Virtual interfaces & clocking blocks: connecting classes to signals race-free",
+      "Processes & IPC: fork/join variants, events, semaphores, mailboxes",
+      "Program vs module scheduling regions (awareness); packages for TB organization",
+      "Queues, dynamic arrays, associative arrays as verification workhorses"
+    ],
+    resources: [
+      { t: "book", label: "Chris Spear — SystemVerilog for Verification (3rd ed.)", url: "https://link.springer.com/book/10.1007/978-1-4614-0715-7" },
+      { t: "site", label: "ChipVerify SystemVerilog section", url: "https://www.chipverify.com/systemverilog/systemverilog-tutorial" },
+      { t: "tool", label: "EDA Playground (commercial sims free for small jobs)", url: "https://www.edaplayground.com" }
+    ],
+    exercises: [
+      "Build a class-based TB for your UART: transaction class, generator, driver, monitor, scoreboard, connected by mailboxes — no UVM yet.",
+      "Write constraints generating AXI-ish bursts: aligned addresses, legal lengths, 10% boundary-crossing cases; prove distribution with a histogram.",
+      "Demonstrate (in 20 lines) the classic race a clocking block prevents: TB and DUT both acting on the same posedge."
+    ],
+    gotchas: [
+      "Class handles are references: pushing the SAME transaction object into a mailbox N times gives N views of one mutating object — clone before reuse (deep vs shallow copy).",
+      "`randomize()` returns 0 on constraint failure and your test silently runs with stale values — ALWAYS check the return (`assert(obj.randomize())`).",
+      "fork/join_none inside loops capturing the loop variable — every classic SV course bug list starts here (use automatic variables)."
+    ],
+    practices: [
+      "Drive/sample only through clocking blocks or well-defined interface tasks; raw `@(posedge clk) sig = x` in class-based benches invites races.",
+      "Seed management: print it, log it, make `+ntb_random_seed=` (or equivalent) part of every failure report."
+    ]
+  },
+  {
+    id: "t-crt-cov", title: "Constrained-random & functional coverage", kind: "core",
+    summary: "Random stimulus finds bugs you didn't imagine; functional coverage tells you when you've exercised what you planned. Together they define modern verification.",
+    learn: [
+      "Coverage-driven verification loop: constrain → run → measure → close holes",
+      "covergroups, coverpoints, bins, crosses; sampling strategy",
+      "Coverage options: weights, goals, `ignore_bins`, `illegal_bins`",
+      "Directed-random balance: seeds ×soak vs targeted tests for stubborn holes",
+      "Merging coverage across runs; ranking tests"
+    ],
+    resources: [
+      { t: "book", label: "Spear — coverage chapters" },
+      { t: "site", label: "Verification Academy — Coverage courses & cookbook", url: "https://verificationacademy.com/topics/coverage" }
+    ],
+    exercises: [
+      "Add functional coverage to the FIFO bench: fill levels {empty, 1, mid, almost-full, full}, crossed with {write, read, both} operations — then run random until 100% and note which crosses were HARD to hit.",
+      "Write an `illegal_bins` entry that catches a protocol violation via coverage sampling, and confirm it fires on a broken DUT.",
+      "Take a coverage hole you can't hit randomly; close it three ways: tighter constraint, directed test, or prove it unreachable (and document which you chose and why)."
+    ],
+    gotchas: [
+      "100% coverage of a bad model proves nothing — coverage measures your STIMULUS against your PLAN, not correctness; checkers do the proving.",
+      "Auto-bins explosion: a 32-bit coverpoint with default bins is 4 billion bins of noise; design bins to encode MEANING (zero, max, boundaries, ranges).",
+      "Sampling at the wrong event (every clock vs per-transaction) silently inflates or starves coverage."
+    ],
+    practices: [
+      "Every coverpoint traces to a verification-plan line; coverage reviews walk the plan, not the raw report.",
+      "Nightly regression with rotating seeds; keep a fixed 'smoke' seed set for fast sanity."
+    ]
+  },
+  {
+    id: "t-uvm", title: "UVM — Universal Verification Methodology", kind: "core",
+    summary: "The industry-standard class library and cookbook for scalable, reusable testbenches: agents, sequences, factory, config DB, phasing.",
+    learn: [
+      "UVM architecture: test → env → agents (driver/sequencer/monitor) → scoreboard; TLM ports",
+      "Sequences & sequence items; virtual sequences for multi-interface coordination",
+      "Factory overrides and why they exist; config_db discipline",
+      "Phases (build/connect/run + objections); reporting & verbosity",
+      "RAL (register abstraction layer) basics for register-map testing",
+      "Reusing agents across projects; env layering (block → subsystem)"
+    ],
+    resources: [
+      { t: "site", label: "Verification Academy — UVM Cookbook (the standard reference)", url: "https://verificationacademy.com/cookbook/uvm-universal-verification-methodology" },
+      { t: "site", label: "ClueLogic — 'UVM Tutorial for Candy Lovers' (gentlest on-ramp)", url: "https://cluelogic.com/2011/07/uvm-tutorial-for-candy-lovers-overview/" },
+      { t: "doc", label: "Accellera UVM 1.2 / IEEE 1800.2 reference", url: "https://accellera.org/downloads/standards/uvm" }
+    ],
+    exercises: [
+      "Convert your class-based UART bench to UVM: one agent, one scoreboard, three tests (smoke, random soak, error injection) sharing the env.",
+      "Use a factory override to swap a well-behaved driver for an error-injecting driver WITHOUT touching the env code — the moment UVM 'clicks'.",
+      "Build a virtual sequence coordinating simultaneous traffic on two agents (e.g., config writes racing data traffic)."
+    ],
+    gotchas: [
+      "UVM's value is reuse and scale — a 5,000-line UVM bench for a 50-line module is cargo-culting; keep judgment about when plain SV suffices.",
+      "config_db typos fail at runtime with unhelpful nulls — set/get with mismatched types or paths is the #1 beginner UVM time sink (use `uvm_config_db#(T)` consistently, check get() returns).",
+      "Objection leaks (raise without drop) hang tests; end-of-test debugging is a rite of passage — learn `+UVM_OBJECTION_TRACE` early.",
+      "Free simulators don't run UVM well; plan for Questa/VCS/Xcelium access (many free options via EDA Playground for small exercises)."
+    ],
+    practices: [
+      "Follow the cookbook structure exactly at first; deviate only once you can articulate why.",
+      "One agent per protocol, self-contained and project-agnostic — your personal agent library is career capital.",
+      "Scoreboards compare TRANSACTIONS from monitors, never peek DUT internals."
+    ]
+  },
+  {
+    id: "t-sva", title: "SystemVerilog Assertions (SVA)", kind: "core",
+    summary: "Executable specifications embedded in the design: immediate and concurrent assertions, sequences, and properties that catch bugs at the point of violation.",
+    learn: [
+      "Immediate vs concurrent assertions; clocking and disable iff (reset)",
+      "Sequences: `##` delay, `[*]` repetition, throughout, until",
+      "Implication `|->` vs `|=>`; antecedent/consequent thinking; vacuous passes",
+      "`$rose/$fell/$stable/$past`; local variables in sequences",
+      "assume vs assert vs cover — same syntax, three roles (sim + formal)",
+      "Binding assertions to RTL (`bind`) to keep design files clean"
+    ],
+    resources: [
+      { t: "book", label: "Cohen/Venkataramanan/Kumari — SystemVerilog Assertions Handbook" },
+      { t: "paper", label: "Sutherland — 'Getting Started with SVA' papers", url: "http://www.sutherland-hdl.com/papers.html" },
+      { t: "site", label: "ChipVerify SVA tutorial", url: "https://www.chipverify.com/systemverilog/systemverilog-assertions" }
+    ],
+    exercises: [
+      "Write the canonical protocol set for valid/ready: no drop, no change while stalled, no X on valid — bind them to your skid buffer and break the design to watch each fire.",
+      "Assert your FIFO's contract: never write when full, never read when empty, count consistency (`$past` based).",
+      "Write a request-gets-grant-within-N property for your arbiter, plus a fairness cover; find N experimentally, then verify formally later."
+    ],
+    gotchas: [
+      "Vacuous passes: an implication whose antecedent never fires 'passes' while checking NOTHING — always pair key properties with `cover` of the antecedent.",
+      "Unclocked/misclocked concurrent assertions sample at surprising times; know the preponed-region sampling semantics.",
+      "`disable iff` on the wrong reset polarity silently disables the assertion forever — another 'passes while checking nothing' trap. Review assertion ENABLEMENT, not just logic."
+    ],
+    practices: [
+      "Designers write interface assertions WITH the RTL (they're the cheapest bug-finders you'll ever deploy); verification adds end-to-end properties.",
+      "Assertion density is a review metric: every handshake, every FSM invariant, every counter relationship."
+    ]
+  },
+  {
+    id: "t-formal", title: "Formal verification", kind: "adv",
+    summary: "Exhaustive proof instead of sampled simulation: model checking with assertions/assumptions, bounded proofs, and formal apps (connectivity, deadlock, X-prop).",
+    learn: [
+      "Formal mindset: environment via `assume`, properties via `assert`, reachability via `cover`",
+      "Bounded (BMC) vs unbounded proof; induction and why it fails (invariant strengthening)",
+      "Abstractions: free variables, counters abstraction, reducing state space",
+      "Formal-friendly design sizing; block-level targeting",
+      "Open tooling: SymbiYosys flow end-to-end",
+      "Formal apps concept: register-map checks, connectivity, unreachable-code"
+    ],
+    resources: [
+      { t: "tool", label: "SymbiYosys (sby) — open-source formal front-end", url: "https://symbiyosys.readthedocs.io" },
+      { t: "site", label: "ZipCPU formal verification tutorials (the best free intro)", url: "https://zipcpu.com/tutorial/" },
+      { t: "book", label: "Seligman/Schubert/Kumar — Formal Verification: An Essential Toolkit" }
+    ],
+    exercises: [
+      "Formally verify your synchronous FIFO with SymbiYosys: prove no-overflow/no-underflow and data integrity via the two-token trick; get an induction proof, not just BMC.",
+      "Take a failing induction proof and strengthen invariants until it passes — write down each invariant you had to add and why.",
+      "Formally verify your arbiter's starvation-freedom (request implies grant within N) and extract a counterexample trace by weakening N."
+    ],
+    gotchas: [
+      "Over-constraining with assumptions proves your design correct in a world that doesn't exist — review assumes MORE skeptically than asserts; cover-check that legal stimulus is still reachable.",
+      "BMC to depth 20 proves nothing about cycle 21 — know exactly which guarantee (bounded/unbounded) you're claiming.",
+      "State-space explosion: formal on a whole subsystem times out; formal wins at BLOCK level with clean interfaces."
+    ],
+    practices: [
+      "Every reusable 'leaf' block (FIFOs, arbiters, CDC structures, counters) deserves a formal proof — cheap insurance, huge leverage.",
+      "Keep formal collateral (properties, .sby files) in-repo and in CI at low bound as a fast regression."
+    ]
+  },
+  {
+    id: "t-cocotb", title: "cocotb — Python testbenches", kind: "adv",
+    summary: "Drive any simulator from Python coroutines: leverage the Python ecosystem (numpy, scapy, pytest) as reference models and stimulus generators.",
+    learn: [
+      "Coroutine-based TB structure: async/await, Triggers (RisingEdge, Timer)",
+      "cocotb-bus/extension libraries for AXI/streaming drivers & monitors",
+      "Reference modeling with numpy/scipy; comparing DUT vs model",
+      "pytest integration, parametrized regression, CI friendliness",
+      "When cocotb beats SV (algorithmic refs, protocol stacks) and when it doesn't (UVM shops, heavy constrained-random)"
+    ],
+    resources: [
+      { t: "doc", label: "cocotb documentation", url: "https://docs.cocotb.org" },
+      { t: "site", label: "cocotb + Verilator/Icarus quickstarts", url: "https://www.cocotb.org" },
+      { t: "site", label: "Alex Forencich's verilog-axi + cocotb testbenches (study-worthy examples)", url: "https://github.com/alexforencich/verilog-axi" }
+    ],
+    exercises: [
+      "Re-verify your FIR filter with cocotb using numpy/scipy as the golden model (frequency response comparison, not just sample matching).",
+      "Build a cocotb AXI-Lite regression for a register block driven from a YAML register description — generator + tests from one source.",
+      "Wire a cocotb suite into GitHub Actions/GitLab CI with Icarus or Verilator; make a PR gate."
+    ],
+    gotchas: [
+      "Python TB speed: heavy per-cycle Python interaction is slow — batch work, use bus models, or move hot loops into the RTL/monitors.",
+      "Signal writes land after the current evaluation (like NBA) — read-after-write within one coroutine step surprises newcomers.",
+      "X/Z handling differs across simulators under cocotb; pin your simulator per project."
+    ],
+    practices: [
+      "Golden rule stands: independent reference model, transaction-level compare, automatic PASS/FAIL with non-zero exit on failure.",
+      "Use cocotb where Python's ecosystem is the leverage; don't rewrite working SV infrastructure for fashion."
+    ]
+  },
+  {
+    id: "t-covclosure", title: "Coverage closure & regression discipline", kind: "core",
+    summary: "The end-game: merging coverage, triaging failures at scale, waiver hygiene, and the sign-off checklist that says 'verification is done'.",
+    learn: [
+      "Code coverage kinds: line/branch/expression/toggle/FSM — and what each misses",
+      "Merging & ranking; excluding code with documented justification",
+      "Regression triage: bucketing failures by signature, flaky-test policy",
+      "Sign-off criteria: plan coverage, code coverage, assertion density, open-bug bar",
+      "Metrics honesty: what 100% does and doesn't mean"
+    ],
+    resources: [
+      { t: "site", label: "Verification Academy — Metrics & closure content", url: "https://verificationacademy.com" }
+    ],
+    exercises: [
+      "Run code coverage on your FIFO bench; find one uncovered branch, decide: new test, dead code, or waiver — and execute the decision.",
+      "Build a regression script: N seeds × M tests, JUnit-style results, coverage merge, one-page HTML summary.",
+      "Write a sign-off memo for your FIFO as if to a project lead: plan status, coverage numbers, waivers, known limitations, residual risk."
+    ],
+    gotchas: [
+      "Toggle coverage on a bus that toggled in reset counts as 'covered' — coverage tools are literal; closure review needs human judgment per hole.",
+      "Waivers without owners and expiry dates become permanent lies — waiver files need the same review rigor as RTL.",
+      "A regression that's 2% flaky trains everyone to ignore red — quarantine flaky tests same-day, root-cause within the week."
+    ],
+    practices: [
+      "Coverage closure review is a meeting with the PLAN on screen, walking holes one by one — not an emailed percentage.",
+      "Every verification artifact (plan, benches, seeds, waivers, results) is versioned with the RTL it verified."
+    ]
+  }
+  ]
+},
+{
+  id: "s6", title: "Validation & Lab Bring-Up — Hardware Meets Reality", duration: "4–6 weeks",
+  goal: "Simulation passing is necessary, not sufficient. Learn on-chip debug, board bring-up procedure, lab instruments, and HW/SW co-debug — the skills that turn 'it should work' into 'it works, and here's the evidence'.",
+  milestone: [
+    "You can plan and execute a board bring-up from power rails to full-function, documenting as you go.",
+    "You've debugged a real hardware-only failure (one that simulation didn't show) to root cause.",
+    "You can capture, trigger, and interpret ILA/SignalTap traces efficiently."
+  ],
+  topics: [
+  {
+    id: "t-ila", title: "On-chip debug: ILA / SignalTap / VIO", kind: "core",
+    summary: "Logic analyzers built from spare fabric: probe internal signals in live silicon, trigger on conditions, and stream out waveforms over JTAG.",
+    learn: [
+      "ILA insertion: netlist-flow (mark_debug) vs instantiated cores; capture depth vs BRAM cost",
+      "Trigger design: basic/advanced conditions, sequences, capture windows, qualification",
+      "VIO for poking inputs/reading status without recompiling",
+      "Debug over JTAG vs debug hub speeds; multiple ILAs, cross-triggering",
+      "The recompile cost problem: planning probes ahead; incremental flows for debug",
+      "Interpreting captures: correlating trigger time with system events"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG908 — Programming and Debugging (ILA/VIO chapters)", url: "https://docs.amd.com/r/en-US/ug908-vivado-programming-debugging" },
+      { t: "doc", label: "Intel SignalTap II user guide", url: "https://www.intel.com/content/www/us/en/docs/programmable/683552/" }
+    ],
+    exercises: [
+      "Instrument your UART receiver with an ILA; trigger on framing error and capture the 128 cycles before and after (window centering).",
+      "Use VIO to force an error condition into a running design and watch the recovery FSM in the ILA — no recompile between experiments.",
+      "Debug drill: have a friend inject one of three known bugs into your design; find which one using ONLY ILA captures (no source diff)."
+    ],
+    gotchas: [
+      "Probing a signal changes the design: mark_debug prevents optimizations and adds routing — timing can shift, and rarely the bug 'moves'. Keep probes in place across the debug session; remove them all before release.",
+      "ILA samples on a chosen clock: probing CDC signals with the wrong clock shows you fiction. Probe each domain with its own clock.",
+      "Capture depth × width lives in BRAM — on a full device, adding debug can break placement; budget debug BRAM from day one."
+    ],
+    practices: [
+      "Ship debug hooks deliberately: a standard status/debug register block and one 'debug header' ILA config kept in the repo, not improvised at 2am.",
+      "Every lab debug session ends with notes: symptom, hypothesis chain, root cause, fix, and 'how simulation missed it'."
+    ]
+  },
+  {
+    id: "t-bringup", title: "Board bring-up SOP", kind: "core",
+    summary: "The disciplined sequence from first power-on to validated board: rails, clocks, configuration, JTAG, then interfaces one at a time — with a checklist, not vibes.",
+    learn: [
+      "Pre-power review: schematic vs pinout report, config straps, rail sequencing",
+      "The bring-up ladder: power rails → oscillators → JTAG chain → configuration (DONE) → LED heartbeat → each interface in isolation",
+      "Bring-up bitstreams: minimal designs per interface (clock out, loopbacks, walking-ones on buses)",
+      "Working with EEs: reading rework requests, blue wires, cut-trace implications for constraints",
+      "Bring-up log discipline: serials, versions, measurements, anomalies"
+    ],
+    resources: [
+      { t: "site", label: "Adam Taylor — bring-up war stories (MicroZed Chronicles)", url: "https://www.adiuvoengineering.com/microzed-chronicles" },
+      { t: "doc", label: "Your device's schematic checklist appnote (e.g., AMD XAPP + board design guides)", url: "https://docs.amd.com" }
+    ],
+    exercises: [
+      "Write a complete bring-up plan for your dev board AS IF it were a new custom board: 25+ ordered checklist items with expected measurements (rail voltages, clock frequencies, IDCODE).",
+      "Build a 'board exerciser' bitstream: heartbeat LED, clock frequency counters reported over UART, and a register readable via JTAG that reports build git-hash.",
+      "Simulate disaster: with the board unpowered, list the 5 most likely reasons DONE would never assert, and the measurement that isolates each."
+    ],
+    gotchas: [
+      "First power-on with the FPGA installed and full firmware is how boards die — bring up rails with minimal load and current-limited supplies first.",
+      "A silently wrong pinout (two swapped UART pins) costs days if you assume RTL bugs first — trust order: board, constraints, RTL, only then tools.",
+      "IDCODE mismatch or unstable JTAG usually means signal integrity or voltage on the JTAG header, not software — check with a scope before reinstalling drivers."
+    ],
+    practices: [
+      "One variable at a time: never change RTL, constraints, and hardware between two measurements.",
+      "The bring-up checklist is a versioned document; a copy gets filled per board serial — this becomes your manufacturing test seed."
+    ]
+  },
+  {
+    id: "t-instruments", title: "Lab instruments: scope, logic analyzer, protocol tools", kind: "core",
+    summary: "Enough instrument fluency to answer 'what is the silicon actually doing': oscilloscopes for signal quality, logic analyzers for buses, protocol analyzers for links.",
+    learn: [
+      "Scope skills: probing technique (ground springs!), bandwidth vs edge rates, triggering, persistence for glitch hunting",
+      "Eye diagrams and what 'good' looks like; rise time and ringing basics",
+      "Logic analyzer / cheap USB LA (sigrok/PulseView) for protocol decode (SPI/I2C/UART)",
+      "When to suspect signal integrity vs logic: symptoms cheat-sheet",
+      "Power measurements: inrush, rail droop under load steps"
+    ],
+    resources: [
+      { t: "site", label: "sigrok/PulseView — open-source LA software", url: "https://sigrok.org" },
+      { t: "video", label: "Keysight/Tektronix 'scope fundamentals' series (free)", url: "https://www.youtube.com/user/KeysightOscilloscope" },
+      { t: "book", label: "Johnson & Graham — High-Speed Digital Design (the 'black magic' book, selected chapters)" }
+    ],
+    exercises: [
+      "Capture your board's SPI flash traffic during configuration with a logic analyzer; decode and identify the read command and first address.",
+      "Probe a fast FPGA output with a long ground lead, then a ground spring; compare the ringing — now you'll never skip the spring.",
+      "Measure a rail during configuration and find the inrush current signature."
+    ],
+    gotchas: [
+      "A 100 MHz scope on a 1ns edge shows you a lie — check probe+scope bandwidth against the signal, not the clock rate (edges carry the harmonics).",
+      "The observer effect is real: a 10pF probe on a marginal net can 'fix' or 'break' it — correlate with on-chip (ILA) observations.",
+      "Digital-looking failures (bit errors at temperature) are often analog (marginal timing, SI, droop) — keep the analog hypothesis alive."
+    ],
+    practices: [
+      "Screenshot + settings + serial number for every meaningful capture; lab evidence without metadata is folklore.",
+      "Know your lab's calibration status; don't debug millivolts on an uncalibrated instrument."
+    ]
+  },
+  {
+    id: "t-hwsw", title: "HW/SW co-debug", kind: "core",
+    summary: "Real systems fail at the boundary: driver vs RTL disagreements, cache surprises, interrupt storms. Learn to debug with one foot in GDB and one in the ILA.",
+    learn: [
+      "JTAG debug of processors (XSDB/OpenOCD/GDB) alongside fabric debug",
+      "Register-interface debug: peek/poke tools (devmem), register dumps as ground truth",
+      "Cache coherency at the HW/SW boundary: when software reads stale DMA data",
+      "Interrupt debug: level vs edge, masked vs pending, storm diagnosis",
+      "Cross-triggering: stop the CPU when the ILA triggers and vice versa",
+      "Building software-visible debug: status registers, event counters, sticky error bits"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG908 + XSDB / Vitis debug flows", url: "https://docs.amd.com/r/en-US/ug908-vivado-programming-debugging" },
+      { t: "tool", label: "OpenOCD", url: "https://openocd.org" }
+    ],
+    exercises: [
+      "Write a devmem-style register-dump script for one of your peripherals, and make 'dump registers first' a reflex before any co-debug session.",
+      "Reproduce a coherency bug: DMA into memory, read stale data through a cached mapping, then fix with proper cache maintenance / non-cached mapping — document both.",
+      "Set up cross-triggering: CPU breakpoint arms the ILA; capture the exact bus transaction a driver write produces."
+    ],
+    gotchas: [
+      "'The hardware is broken' and 'the driver is broken' are symmetric hypotheses — the register dump is the neutral arbiter; build designs where hardware state is observable.",
+      "Write buffers and posted writes mean the CPU 'writing 1 then reading 0' can be correct behavior — know your bus ordering rules before crying hardware bug.",
+      "A read-to-clear status register read by a DEBUGGER clears it — debug tools perturb the system; use sticky bits and counters."
+    ],
+    practices: [
+      "Design-for-debug is architecture: version register, scratch register, event counters, and error-sticky bits in EVERY register block, specified before RTL.",
+      "Joint debug sessions beat email ping-pong: get the driver author and the ILA on the same desk (or call) early."
+    ]
+  },
+  {
+    id: "t-emulation", title: "Prototyping, emulation & sim acceleration", kind: "adv",
+    summary: "Using FPGAs to validate ASICs and accelerate verification: prototyping platforms, partitioning, and the emulation mindset (awareness → practitioner).",
+    learn: [
+      "FPGA prototyping vs emulation vs simulation: speed/visibility/cost triangle",
+      "ASIC→FPGA porting issues: gated clocks, latches, memories, clock speeds, X-behavior",
+      "Multi-FPGA partitioning and pin-multiplexing concepts",
+      "Hybrid flows: co-simulation, transactors (SCE-MI concept)",
+      "Commercial platforms awareness: HAPS, Veloce, Palladium, S2C"
+    ],
+    resources: [
+      { t: "book", label: "'FPGA-Based Prototyping Methodology Manual' (FPMM) — Synopsys, free registration", url: "https://www.synopsys.com" }
+    ],
+    exercises: [
+      "Take an 'ASIC-styled' open core (gated clocks, latch-based) and port it to your FPGA: convert clock gating to enables, replace memories — keep a porting-issues log.",
+      "Design (on paper) the partition of a 2-FPGA prototype for a design 1.5× your device size: what crosses the boundary, at what pin cost, with what timing model?"
+    ],
+    gotchas: [
+      "A prototype running at 1/20th target speed can hide real-time bugs (interrupt coalescing, timeout behavior) — validate rate-sensitive logic separately.",
+      "X-propagation differences: FPGA flops power up to known values, ASIC sim shows X — 'works on the prototype' can still be an ASIC bug."
+    ],
+    practices: [
+      "Keep an explicit 'differences vs target silicon' document for any prototype; every waiver of realism is a validation hole to cover elsewhere."
+    ]
+  },
+  {
+    id: "t-prodtest", title: "Production test & field diagnostics", kind: "opt",
+    summary: "Designing so manufacturing can test it and support can debug it: BIST thinking, loopbacks, and diagnostics that survive into deployment.",
+    learn: [
+      "Manufacturing test vs design validation: coverage per second economics",
+      "Loopback architecture: internal/external loopbacks on every interface",
+      "Memory BIST patterns (walking 1s, checkerboard, address-in-address)",
+      "Boundary scan / JTAG EXTEST for board-level connectivity",
+      "Field diagnostics: error counters, health registers, remote debug hooks"
+    ],
+    resources: [
+      { t: "doc", label: "IEEE 1149.1 (JTAG boundary scan) overview material" }
+    ],
+    exercises: [
+      "Add an external-loopback self-test mode to your UART design that manufacturing could trigger with one register write and read one pass/fail bit.",
+      "Write a DDR-style memory test module (walking ones + address-in-address) with an error-address capture register."
+    ],
+    gotchas: [
+      "A test mode that needs an engineer and a JTAG pod isn't a production test — the target is a technician, a fixture, and seconds per board.",
+      "Field units fail in ways the lab never sees (temperature, aging, cosmic rays for big deployments) — counters and sticky logs are your only witnesses."
+    ],
+    practices: [
+      "Interfaces without loopback modes are interfaces you can't cheaply test — make loopback a design-review checklist item."
+    ]
+  }
+  ]
+},
+{
+  id: "s7", title: "Interfaces & Protocols — Talking to the World", duration: "6–10 weeks",
+  goal: "Master the interfaces that dominate real FPGA work: from UART/SPI/I2C through AXI to DDR memory, and onward to PCIe, Ethernet, and multi-gigabit serial links. Protocol fluency is what makes you immediately useful on any team.",
+  milestone: [
+    "You've implemented UART, SPI, and I2C from spec and validated them against real devices.",
+    "You can design, verify, and debug AXI4-Lite and AXI-Stream blocks and explain every channel rule.",
+    "You've brought up external memory and at least one high-speed interface on hardware."
+  ],
+  topics: [
+  {
+    id: "t-lowspeed", title: "UART, SPI, I2C — from spec to silicon", kind: "core",
+    summary: "The bring-up trinity: simple enough to master completely, real enough to teach oversampling, tristate buses, clock stretching, and datasheet discipline.",
+    learn: [
+      "UART: framing, baud generation, 16× oversampling RX, error flags (framing/parity/overrun)",
+      "SPI: modes 0–3 (CPOL/CPHA), chip selects, full-duplex shifting, dual/quad variants",
+      "I2C: open-drain, START/STOP, ACK/NACK, clock stretching, multi-master arbitration, 10-bit addressing",
+      "Reading peripheral datasheets: timing diagrams to RTL requirements",
+      "Register-map front-ends for each: making them CPU-controllable"
+    ],
+    resources: [
+      { t: "site", label: "Nandland UART/SPI tutorials with RTL", url: "https://nandland.com" },
+      { t: "doc", label: "NXP UM10204 — the I2C specification", url: "https://www.nxp.com/docs/en/user-guide/UM10204.pdf" },
+      { t: "site", label: "FPGA4Fun serial interfaces", url: "https://www.fpga4fun.com" }
+    ],
+    exercises: [
+      "Build a full UART (TX+RX+FIFOs+AXI-Lite regs) with parametric baud; validate against a USB-UART dongle at 3 baud rates, then prove RX tolerance by sweeping a deliberately-off TB baud ±3%.",
+      "Implement SPI master supporting all 4 modes; read the JEDEC ID from your board's SPI flash — mode bugs make this fail instantly (great negative feedback).",
+      "Implement an I2C master with clock stretching support; read a temperature sensor, then torture-test with a TB slave that stretches SCL at every possible byte boundary."
+    ],
+    gotchas: [
+      "UART RX sampled at 1× instead of mid-bit with oversampling accumulates phase error and fails at the 8th bit with mismatched clocks — the classic 'works with my dongle, fails with theirs'.",
+      "SPI mode mismatches shift data by one edge — reads look 'almost right' (shifted by a bit), which misleads debugging for hours.",
+      "I2C without clock-stretching support works with most devices then hangs on the one that stretches; and a missing pull-up strength calculation fails only at 400kHz+ or long traces.",
+      "Multi-byte reads from devices with auto-increment: losing sync on a NACK corrupts every subsequent transaction — handle error recovery, not just the happy path."
+    ],
+    practices: [
+      "Implement from the SPECIFICATION, verify against real devices — never code to one device's observed behavior.",
+      "Every serial IP gets loopback mode, error counters, and timeout-recovery from day one."
+    ]
+  },
+  {
+    id: "t-axi", title: "AXI4 / AXI-Lite / AXI-Stream", kind: "core",
+    summary: "The lingua franca of FPGA system design (AMBA AXI): five-channel memory-mapped protocol, its Lite subset, and the streaming variant — plus interconnects and the verification patterns around them.",
+    learn: [
+      "Channel architecture: AW/W/B and AR/R; per-channel valid/ready independence",
+      "AXI-Lite: the register-interface subset; write strobes; response codes",
+      "Full AXI4: bursts (INCR/WRAP), IDs and out-of-order semantics, 4KB boundary rule, exclusive access awareness",
+      "AXI-Stream: TVALID/TREADY/TLAST/TKEEP/TUSER; packet thinking",
+      "Interconnect realities: crossbars vs shared, ID width growth, clock/width converters",
+      "Verifying AXI: protocol checkers/BFMs; common deadlock patterns"
+    ],
+    resources: [
+      { t: "doc", label: "ARM IHI0022 — AMBA AXI Protocol Specification (read it, really)", url: "https://developer.arm.com/documentation/ihi0022/latest" },
+      { t: "site", label: "ZipCPU AXI series (including 'AXI-Lite is harder than you think')", url: "https://zipcpu.com/topics.html" },
+      { t: "site", label: "Alex Forencich verilog-axi (reference-quality open implementations)", url: "https://github.com/alexforencich/verilog-axi" }
+    ],
+    exercises: [
+      "Write an AXI4-Lite slave register block from the spec (not from a template); pass it against a protocol checker AND ZipCPU's formal AXI-Lite properties.",
+      "Build an AXI-Stream packet FIFO honoring TLAST, with a TB generating randomized packet lengths including length-1 and back-to-back packets.",
+      "Create the classic deadlock in simulation: master waits for B response before finishing W data, slave waits for all W data before B — then fix your slave to be deadlock-immune.",
+      "Design an AXI4 DMA read engine issuing INCR bursts that never cross 4KB; verify with randomized start addresses and lengths."
+    ],
+    gotchas: [
+      "Write-response before all write data, or requiring AW before W (or vice versa) — channel-ordering assumptions are THE AXI bug family; the spec allows channels to arrive in any order.",
+      "The 4KB boundary rule bites every DMA author exactly once — bake the split into the address generator, and test lengths that land exactly on the boundary.",
+      "Vendor 'AXI-Lite templates' historically contained protocol violations — passing against your OWN checker is the standard, not 'the template did it'.",
+      "WSTRB handling: partial writes are legal on Lite; ignoring strobes corrupts adjacent bytes and only shows up when software does a byte write."
+    ],
+    practices: [
+      "Never integrate an AXI block that hasn't passed a protocol checker (simulation BFM/monitor or formal properties) — integration debug costs 10× block debug.",
+      "Register slices at every major AXI boundary by default; remove only with timing evidence.",
+      "Keep the address map in ONE machine-readable source (YAML/SystemRDL) generating RTL, headers, and docs."
+    ]
+  },
+  {
+    id: "t-ddr", title: "External memory: DDR & controllers", kind: "core",
+    summary: "Using MIG/EMIF-class memory controllers well: the user interface, efficiency thinking, calibration, and the art of not blaming the DRAM.",
+    learn: [
+      "DRAM fundamentals: banks/rows/columns, activate/precharge, refresh, tRC/tRCD/tRP intuition",
+      "Why random access murders bandwidth: row-hit vs row-miss economics",
+      "Controller IP flow (MIG/EMIF): pinout rules, byte lanes, calibration stages",
+      "The user-side interface: command/data queues, reordering, backpressure",
+      "Efficiency engineering: burst alignment, bank interleaving, request patterns",
+      "Debugging: calibration failures, data eye margins, temperature effects"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG586/UG583 — Memory Interface Solutions + PCB guidelines", url: "https://docs.amd.com" },
+      { t: "paper", label: "'What Every Programmer Should Know About Memory' — Drepper (DRAM chapters)", url: "https://people.freebsd.org/~lstewart/articles/cpumemory.pdf" }
+    ],
+    exercises: [
+      "Bring up the memory controller on your board; run a hardware memory test at full rate for an hour (walking patterns + PRBS data) with an error-capture register.",
+      "Build a traffic generator measuring achieved bandwidth for: sequential bursts, random words, and strided access — tabulate efficiency vs theoretical peak and explain each gap.",
+      "Deliberately mis-order a DDR pinout in a paper exercise and list which calibration stage would catch it."
+    ],
+    gotchas: [
+      "80% of 'DDR bugs' are user-logic bugs at the controller interface (dropped ready, wrong burst math) — instrument YOUR side before doubting calibration.",
+      "Calibration passing at 25°C and failing at 70°C is real: margin, not pass/fail, is the health metric — learn to read the margin/eye reports.",
+      "Refresh steals bandwidth periodically; latency-sensitive designs must budget for tRFC stalls, or you'll chase phantom 'stutters'."
+    ],
+    practices: [
+      "Follow the vendor PCB/pinout rules to the letter and run the pin-planning DRC before board layout is frozen — memory pinout errors are respins, period.",
+      "Wrap the vendor controller behind your own interface adapter; controllers and their quirks change across generations."
+    ]
+  },
+  {
+    id: "t-serdes", title: "High-speed serial transceivers (SerDes)", kind: "adv",
+    summary: "Multi-gigabit links (GTP/GTX/GTY, Intel HSSI): 8b/10b and 64b/66b encoding, clock recovery, equalization — the physical layer under PCIe, Ethernet, JESD204, and Aurora.",
+    learn: [
+      "SerDes anatomy: PLLs (channel/quad), PCS vs PMA, comma alignment, channel bonding",
+      "Line coding: 8b/10b (disparity, K-characters), 64b/66b scrambling",
+      "Clock recovery, reference clock quality (jitter), and PPM offset tolerance",
+      "Equalization: pre-emphasis, CTLE, DFE — what the knobs do and when",
+      "Eye scans (IBERT), BER math, PRBS testing methodology",
+      "The transceiver wizard flow: Aurora as a first protocol"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG476/UG578 — GTX/GTY Transceivers User Guides", url: "https://docs.amd.com" },
+      { t: "doc", label: "AMD PG046 — Aurora 8B/10B (easy first SerDes protocol)", url: "https://docs.amd.com" }
+    ],
+    exercises: [
+      "Bring up a transceiver loopback (near-end PCS, then far-end PMA with an SMA/loopback fitting) at 3+ Gbps; run IBERT and capture an eye diagram.",
+      "Run PRBS-31 for 10^13 bits; compute the BER confidence interval you've demonstrated (learn why 'zero errors so far' has error bars).",
+      "Send data over Aurora between two boards (or two quads); verify channel-up recovery after physically pulling the cable mid-traffic 10 times."
+    ],
+    gotchas: [
+      "Reference clock jitter is destiny: a link that 'mostly works' from a noisy clock source will fail across temperature and units — check the jitter spec BEFORE the board is designed.",
+      "8b/10b running disparity errors that appear only on specific data patterns usually mean signal integrity, not logic — pattern-dependent = analog.",
+      "Comma alignment can lock to the wrong word boundary in pathological patterns; protocol-level framing checks are your safety net.",
+      "TX and RX polarity inversion (swapped P/N) is a one-bit config fix — check it before re-spinning anything."
+    ],
+    practices: [
+      "IBERT/eye-scan characterization across voltage/temperature corners is part of design validation sign-off for every link, not an optional lab curiosity.",
+      "Keep a per-link settings record (swing, pre-emphasis, EQ) under version control with rationale."
+    ]
+  },
+  {
+    id: "t-pcie", title: "PCI Express", kind: "adv",
+    summary: "The workhorse host interface: TLPs, credits, configuration space, DMA engines, and the driver handshake — built on hard IP blocks you configure rather than write.",
+    learn: [
+      "Layering: TLP/DLLP/physical; posted vs non-posted; completion credits & flow control",
+      "Configuration space, BARs, enumeration from the host's view",
+      "Hard IP integration (AXI bridges); requester vs completer paths",
+      "DMA design: descriptors, scatter-gather, MSI/MSI-X interrupts, XDMA/QDMA-class IP",
+      "Performance: max payload size, read-request sizing, completion reassembly",
+      "Debug: LTSSM states, link training failures, lspci fluency"
+    ],
+    resources: [
+      { t: "book", label: "Mindshare — PCI Express Technology 3.0 (Budruk et al.)" },
+      { t: "doc", label: "AMD PG054/PG213 (PCIe hard block) + XDMA PG195", url: "https://docs.amd.com" },
+      { t: "site", label: "FPGADrive / Xillybus tutorials for first bring-up", url: "https://xillybus.com/doc" }
+    ],
+    exercises: [
+      "Bring up a PCIe endpoint with XDMA-class IP on a host machine: enumerate (lspci -vvv), map a BAR, and read a version register from userspace.",
+      "Measure DMA throughput host↔card vs transfer size (4KB → 4MB); explain the small-transfer cliff (per-descriptor and interrupt overheads).",
+      "Break link training deliberately (wrong refclk setting in a copy of the project) and learn the LTSSM-stuck-in-Polling signature."
+    ],
+    gotchas: [
+      "PCIe problems bisect at enumeration: if the device never appears, it's clocks/reset/pins/LTSSM (hardware-side); if it appears then misbehaves, it's TLP/DMA/driver logic. Different toolkits for each half.",
+      "Non-posted requests without completion credits back up the whole link — completer logic that stalls is a system hang, not a local bug.",
+      "The 100 MHz PCIe refclk is spread-spectrum from the slot: using it for user logic clocks, or using a non-SSC local clock for the link, both cause exotic failures.",
+      "Missing interrupts are usually masked/unregistered MSI vectors on the driver side — check both ends before ILA archaeology."
+    ],
+    practices: [
+      "Version + capability registers in BAR0 at offset 0 — the driver's first read validates the whole path and prevents 'wrong bitstream' confusion forever.",
+      "Keep a known-good reference design bitstream for the board — when hardware questions arise, bisect against it."
+    ]
+  },
+  {
+    id: "t-ethernet", title: "Ethernet & networking on FPGA", kind: "adv",
+    summary: "From MII/RGMII PHYs and MACs to 10G/25G+ hard MACs: framing, checksums, FIFOs at line rate, and the packet-processing mindset.",
+    learn: [
+      "Ethernet framing: preamble, MAC addresses, EtherType, FCS/CRC32",
+      "PHY interfaces: RGMII timing (that 2ns shift!), SGMII, SFP+ / 10GBASE-R",
+      "MAC IP integration: AXI-Stream packet interfaces, flow control (pause)",
+      "ARP/ICMP/UDP in RTL: enough IP stack to be useful without a CPU",
+      "Line-rate thinking: back-to-back minimum frames, inter-frame gap, store-and-forward vs cut-through",
+      "Timestamping/PTP awareness for precision applications"
+    ],
+    resources: [
+      { t: "site", label: "Alex Forencich verilog-ethernet (the open reference)", url: "https://github.com/alexforencich/verilog-ethernet" },
+      { t: "site", label: "fpga4fun Ethernet pages (gentle start)", url: "https://www.fpga4fun.com/10BASE-T.html" }
+    ],
+    exercises: [
+      "Bring up a MAC and answer pings (ARP + ICMP echo in fabric) with Wireshark as your verification tool on the host side.",
+      "Build a UDP packet generator at configurable rate; drive it to line rate with minimum-size frames and verify zero drops with host-side counters.",
+      "Capture RGMII with a scope and verify the clock-to-data skew against the PHY datasheet — then relate it to your IDELAY/ODELAY constraints."
+    ],
+    gotchas: [
+      "RGMII skew (internal delay on PHY? on MAC? board traces?) is a four-way negotiation — get it wrong and you receive 'almost-valid' frames that corrupt intermittently under temperature.",
+      "Minimum-size frames at line rate is the stress case that breaks naive packet FIFOs and header parsers — 64-byte frames at 10G arrive every 67ns; design and TEST for it.",
+      "Auto-negotiation mismatches (forced vs auto) produce half-duplex weirdness that looks like an RTL bug — check PHY registers via MDIO first.",
+      "FCS: forgetting that the MAC strips (or doesn't strip) the CRC in your configuration corrupts length math by 4 bytes forever."
+    ],
+    practices: [
+      "Wireshark + host tooling is your free protocol analyzer: script traffic tests (scapy) as part of validation.",
+      "Per-port stats counters (RX/TX frames, CRC errors, drops) in RTL are non-negotiable — networking debug without counters is guessing."
+    ]
+  },
+  {
+    id: "t-video", title: "Video & display interfaces (domain option)", kind: "opt",
+    summary: "A rewarding specialization: video timing, HDMI/DisplayPort/MIPI, line buffers, and streaming pixel pipelines — visual feedback makes learning addictive.",
+    learn: [
+      "Video timing: sync/porch/active geometry, pixel clocks, CEA/VESA modes",
+      "HDMI/DVI: TMDS encoding, serialization on general-purpose FPGA I/O",
+      "MIPI CSI-2 camera input basics; Bayer patterns, demosaicing awareness",
+      "Line buffers and streaming kernels (convolution) at pixel rate",
+      "Frame buffers in DDR: bandwidth math for resolution × rate × format"
+    ],
+    resources: [
+      { t: "site", label: "Project F — 'FPGA graphics' series (outstanding)", url: "https://projectf.io/posts/fpga-graphics/" },
+      { t: "site", label: "fpga4fun HDMI/graphics pages", url: "https://www.fpga4fun.com" }
+    ],
+    exercises: [
+      "Generate 720p test patterns out HDMI/DVI from your board; validate on two different monitors (they tolerate different sins).",
+      "Implement a 3×3 convolution (Sobel) on live video with line buffers; count exactly how many BRAMs the line buffers need before coding, then verify.",
+      "Compute DDR bandwidth for 1080p60 RGB888 in and out simultaneously; decide if your board's memory can do it with margin."
+    ],
+    gotchas: [
+      "Monitors are forgiving liars: one displays your slightly-wrong timing fine, the next shows black — validate timing against the standard, not against one panel.",
+      "Pixel-clock domains and DDR-access domains meeting in a frame buffer is a CDC + bandwidth double-trap; underruns look like tearing/flicker.",
+      "Video 'mostly working' with occasional glitch lines usually means a FIFO underrun under worst-case DDR contention — soak test with worst-case traffic."
+    ],
+    practices: [
+      "Build a test-pattern generator and a sink-side CRC checker into every video pipeline — end-to-end integrity checking beats eyeballing."
+    ]
+  }
+  ]
+},
+{
+  id: "s8", title: "SoC FPGAs, HLS & Advanced Design", duration: "8–12 weeks",
+  goal: "Modern FPGA work is system work: ARM cores next to fabric, Linux drivers talking to your RTL, HLS for algorithm blocks, and specializations — DSP, low latency, partial reconfiguration, security, and safety-critical flows.",
+  milestone: [
+    "You've built a full Zynq-class system: custom RTL peripheral + Linux driver + userspace app.",
+    "You can judge when HLS beats RTL (and vice versa) from experience, not opinion.",
+    "You've picked one or two specialization tracks and gone deep."
+  ],
+  topics: [
+  {
+    id: "t-soc", title: "SoC FPGAs: Zynq / Agilex SoC architecture", kind: "core",
+    summary: "Hard processor system (PS) + programmable logic (PL): interfaces between them, boot flow, memory sharing, and interrupts — the platform most products ship on.",
+    learn: [
+      "PS anatomy: cores, on-chip memory, hard peripherals, DDR controller ownership",
+      "PS↔PL interfaces: GP/HP/ACP-class AXI ports; who masters whom; coherency options",
+      "Boot chain: BootROM → FSBL → (bitstream, U-Boot, OS); boot sources",
+      "Interrupts PL→PS; shared DDR bandwidth planning",
+      "Clocking: PS-provided fabric clocks vs PL clocking; reset domains between PS and PL"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG585 — Zynq-7000 TRM (the reference; learn to navigate it)", url: "https://docs.amd.com/r/en-US/ug585-zynq-7000-SoC-TRM" },
+      { t: "book", label: "The Zynq Book (free PDF)", url: "http://www.zynqbook.com" },
+      { t: "site", label: "Adam Taylor MicroZed Chronicles (400+ articles)", url: "https://www.adiuvoengineering.com/microzed-chronicles" }
+    ],
+    exercises: [
+      "Build the canonical first system: custom AXI-Lite peripheral (your UART or a math block) on a GP port, controlled from a bare-metal app.",
+      "Move data with a DMA through an HP port into PS DDR; measure throughput vs theoretical, and observe the effect of competing CPU memory traffic.",
+      "Trigger a PL interrupt into the PS and measure interrupt latency bare-metal vs Linux."
+    ],
+    gotchas: [
+      "PS DDR is shared: your PL DMA competes with the OS — bandwidth budgets must include CPU traffic or 'validated' throughput evaporates in production.",
+      "PS peripherals grab pins (MIO) per boot configuration — pin conflicts between PS config and PL constraints confuse everyone once.",
+      "PL isn't configured until software loads it (in many boot flows) — designs assuming fabric-alive-at-boot need the boot order designed, not assumed."
+    ],
+    practices: [
+      "Define the PS/PL contract in a document: address map, interrupt map, clock/reset ownership, bandwidth budget — before RTL and driver work fork.",
+      "Automate the whole boot image build (FSBL + bitstream + kernel) in CI, same as the bitstream."
+    ]
+  },
+  {
+    id: "t-emblinux", title: "Embedded Linux for FPGA systems", kind: "core",
+    summary: "PetaLinux/Yocto, device trees, and the driver boundary: UIO, /dev/mem prototyping, kernel modules, and DMA from userspace.",
+    learn: [
+      "Yocto/PetaLinux basics: building images, adding recipes, kernel configs",
+      "Device tree: describing your PL peripherals (compatible, reg, interrupts)",
+      "Driver ladder: devmem pokes → UIO → proper kernel module → DMA frameworks",
+      "dma-buf/udmabuf and cache-coherent buffer management for PL DMA",
+      "FPGA Manager: loading bitstreams from Linux; overlays for PR"
+    ],
+    resources: [
+      { t: "doc", label: "AMD PetaLinux + Embedded Linux wiki pages", url: "https://xilinx-wiki.atlassian.net/wiki/spaces/A/overview" },
+      { t: "book", label: "Bootlin embedded Linux & kernel training materials (free)", url: "https://bootlin.com/docs/" }
+    ],
+    exercises: [
+      "Add your AXI-Lite peripheral to the device tree; control it via UIO from a Python or C userspace app.",
+      "Write a minimal char-device kernel module for it (open/read/write/mmap); compare development effort vs UIO honestly.",
+      "Stream DMA data into a userspace-visible buffer (udmabuf) and verify integrity under simultaneous CPU load (stress-ng)."
+    ],
+    gotchas: [
+      "Cache coherency again, now with an OS: mmap'ed DMA buffers that are cached give you stale reads that appear timing-dependent — the nastiest class of system bug; be deliberate about coherent vs streaming mappings.",
+      "Device tree errors fail silently (driver just never probes) — `dmesg` and `/proc/device-tree` inspection are your first moves.",
+      "devmem pokes bypass everything (no locking, no cache mgmt) — brilliant for bring-up, banned in production; know which mode you're in."
+    ],
+    practices: [
+      "The register map single-source (SystemRDL/YAML) now also generates the device-tree snippets and driver headers — one source, four artifacts.",
+      "Keep a 'known-good SD card image' per board revision in artifact storage; half of 'board is broken' reports are image drift."
+    ]
+  },
+  {
+    id: "t-hls", title: "High-Level Synthesis (HLS)", kind: "adv",
+    summary: "C/C++ to RTL with pragmas: pipelining, unrolling, interface synthesis, and the co-simulation flow. A productivity multiplier for datapath/algorithm blocks — with sharp edges.",
+    learn: [
+      "HLS mental model: loops → pipelines (II), arrays → memories, args → interfaces",
+      "Core pragmas: PIPELINE, UNROLL, ARRAY_PARTITION, DATAFLOW, INTERFACE",
+      "Arbitrary-precision types (ap_int/ap_fixed) and why float is usually wrong",
+      "Reading HLS reports: II, latency, resource — and the RTL it made",
+      "C-sim vs co-sim vs hardware validation; testbench reuse",
+      "Where HLS wins (algorithm kernels, rapid iteration) vs loses (cycle-exact control, protocols)"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG1399 — Vitis HLS User Guide", url: "https://docs.amd.com/r/en-US/ug1399-vitis-hls" },
+      { t: "book", label: "Kastner, Matai, Neuendorffer — Parallel Programming for FPGAs (free)", url: "https://kastner.ucsd.edu/hlsbook/" }
+    ],
+    exercises: [
+      "Implement the same FIR filter in RTL and HLS; compare Fmax, resources, development time, and how each handles a spec change (tap count 32→48).",
+      "Take a matrix-multiply from II=32 to II=1 using ARRAY_PARTITION and PIPELINE; at each step, predict resources before reading the report.",
+      "Build an HLS kernel with AXI-Stream in/out and AXI-Lite control; integrate it into your SoC system next to hand-written RTL."
+    ],
+    gotchas: [
+      "HLS is not 'software runs in hardware': the C is a SPEC for a circuit — pointer chasing, dynamic allocation, and unbounded loops don't synthesize; think dataflow from the start.",
+      "C-simulation passing means the ALGORITHM is right, not the hardware: interface/pipeline bugs only show in co-sim or on silicon — never skip co-sim.",
+      "II=1 claims can hide a slow clock: check II × achievable-frequency together.",
+      "Small C changes can cause huge QoR swings — pin the tool version and re-baseline after upgrades."
+    ],
+    practices: [
+      "HLS blocks get the same verification rigor as RTL: protocol checkers on interfaces, regression in CI, resource/latency budgets in review.",
+      "Keep synthesizable C clean of `#ifdef` hardware hacks; testbench and kernel separated exactly like TB and RTL."
+    ]
+  },
+  {
+    id: "t-dsp-design", title: "DSP & arithmetic design (specialization)", kind: "adv",
+    summary: "Signal processing on fabric: fixed-point design, filters, FFTs, CORDIC — where FPGAs still crush CPUs and GPUs per watt.",
+    learn: [
+      "Fixed-point methodology: dynamic range analysis, quantization noise, guard bits, saturation/rounding choices",
+      "FIR structures: direct, transposed, systolic; polyphase decimation/interpolation",
+      "IIR feasibility: feedback limits pipelining — biquad sections and their Fmax reality",
+      "FFT architectures: streaming (R2SDF) vs burst; twiddle factors, bit growth",
+      "CORDIC for trig/magnitude; NCOs and DDS",
+      "Verification against golden models: Python/NumPy bit-accurate refs, SNR-based pass criteria"
+    ],
+    resources: [
+      { t: "book", label: "Lyons — Understanding Digital Signal Processing (the friendly classic)" },
+      { t: "book", label: "Harris — Multirate Signal Processing for Communication Systems" },
+      { t: "site", label: "ZipCPU DSP posts (filters, CORDIC)", url: "https://zipcpu.com/topics.html" }
+    ],
+    exercises: [
+      "Design a 15-tap lowpass FIR: coefficients in Python, quantize to 16 bits, measure the frequency-response degradation, implement in RTL, and verify bit-exactly against the quantized model.",
+      "Implement a streaming CORDIC (12 iterations) computing sin/cos; validate accuracy in LSBs across the full phase range.",
+      "Build an NCO + mixer + CIC decimator chain — a tiny DDC — and verify SNR against a NumPy model with an FFT-based test."
+    ],
+    gotchas: [
+      "Bit growth: adding two N-bit numbers needs N+1 bits; a 64-tap MAC needs log2(64) guard bits — truncating early destroys SNR in ways that pass casual tests and fail at low signal levels.",
+      "Saturation vs wraparound: wraparound on overflow turns a loud signal into garbage noise; saturation degrades gracefully — choose consciously per node.",
+      "Filters verified only with sine waves hide intermodulation and overflow bugs — test with multi-tone, noise, and worst-case-amplitude signals."
+    ],
+    practices: [
+      "Fixed-point design doc per chain: format at every node, SNR budget, overflow policy — before RTL.",
+      "Bit-accurate golden model is the contract; RTL-vs-model equivalence runs in every regression."
+    ]
+  },
+  {
+    id: "t-lowlatency", title: "Ultra-low-latency design (specialization)", kind: "adv",
+    summary: "The HFT/real-time discipline: counting nanoseconds through PHY, MAC, and logic; cut-through processing; and measuring what you claim.",
+    learn: [
+      "Latency accounting: where nanoseconds hide (PHY, MAC, FIFOs, CDC, width conversion)",
+      "Cut-through vs store-and-forward tradeoffs; speculative processing",
+      "Clocking for latency: fewer domains, faster clocks vs shallower pipelines",
+      "Deterministic paths: avoiding arbitration jitter; worst-case not average",
+      "Measurement methodology: hardware timestamping, loopback calibration, statistical rigor"
+    ],
+    resources: [
+      { t: "paper", label: "Search: FPGA low-latency trading/networking conference talks (e.g., STAC, FPGA conference)" },
+      { t: "site", label: "Alex Forencich's low-latency Ethernet components", url: "https://github.com/alexforencich" }
+    ],
+    exercises: [
+      "Build a UDP-packet 'reflector' with the lowest latency you can achieve; measure wire-to-wire with hardware timestamps and produce a histogram (not just a mean).",
+      "Remove one pipeline stage from a working design and requalify timing at a lower clock — compute which combination wins on latency.",
+      "Add a parser that starts decoding a packet header before the frame completes (cut-through) and handles the late-CRC-failure case correctly."
+    ],
+    gotchas: [
+      "Average latency is marketing; the tail (p99.9, max) is engineering — jitter sources like refresh, arbitration, and pause frames dominate tails.",
+      "Cut-through means acting on data whose CRC hasn't validated yet — every downstream action needs an abort/poison path.",
+      "Measuring latency with software timestamps adds microseconds of noise to a nanosecond question — hardware timestamping or nothing."
+    ],
+    practices: [
+      "Publish a latency budget table per release: component-by-component, measured vs budgeted, with test methodology attached."
+    ]
+  },
+  {
+    id: "t-pr", title: "Partial reconfiguration / DFX", kind: "adv",
+    summary: "Swapping fabric regions at runtime: reconfigurable partitions, decoupling logic, and the flows that make field-updatable accelerator slots possible.",
+    learn: [
+      "DFX concepts: static region, reconfigurable partitions (RP), module variants (RM)",
+      "Floorplanning RPs; partition pins; what must stay static (clocks, config)",
+      "Decoupling: isolating the RP during swap (bus wedges, reset protocol)",
+      "Bitstream management: partials, delivery (ICAP/PCAP), integrity",
+      "Use cases that justify the complexity — and the many that don't"
+    ],
+    resources: [
+      { t: "doc", label: "AMD UG909 — Dynamic Function eXchange", url: "https://docs.amd.com/r/en-US/ug909-vivado-partial-reconfiguration" }
+    ],
+    exercises: [
+      "Build a two-variant demo: an RP containing either an adder or a multiplier behind the same AXI interface; swap at runtime from Linux via FPGA Manager.",
+      "Demonstrate the failure mode: swap WITHOUT decoupling while a transaction is in flight; watch the bus wedge — then add proper decouplers."
+    ],
+    gotchas: [
+      "An AXI transaction outstanding into an RP during swap hangs the interconnect — decoupling + drain protocol is mandatory, not optional.",
+      "The static region's timing must close against EVERY variant; adding a variant later can break a shipped static design — lock down partition-pin timing budgets early."
+    ],
+    practices: [
+      "Treat each RM like separately-shipped software: version registers inside the RP, compatibility matrix with static-region versions."
+    ]
+  },
+  {
+    id: "t-security", title: "FPGA security (specialization)", kind: "adv",
+    summary: "Protecting the bitstream and the system: encryption/authentication, secure boot, key management, and awareness of side channels and supply-chain concerns — the defensive engineering every shipped product needs.",
+    learn: [
+      "Bitstream encryption (AES) and authentication (RSA/HMAC): what each protects against",
+      "Secure boot chains on SoC parts; key storage (eFUSE vs BBRAM) tradeoffs",
+      "Anti-tamper basics: readback disable, JTAG lockdown, zeroization",
+      "Awareness: side channels (DPA on config), fault injection, cloning/overbuilding threats",
+      "Design integrity: locking debug paths, disabling ILA/JTAG hooks in production images"
+    ],
+    resources: [
+      { t: "doc", label: "AMD security app notes (XAPP1084/1098-class) + UG570 security chapters", url: "https://docs.amd.com" },
+      { t: "paper", label: "Academic surveys: 'FPGA security' (Trimberger & Moore, Proc. IEEE)", url: "https://ieeexplore.ieee.org/document/6860249" }
+    ],
+    exercises: [
+      "Enable encrypted+authenticated bitstream on a dev board with a BBRAM key; document the provisioning steps as a production SOP draft.",
+      "Threat-model one of your projects: assets, adversaries, attack surfaces (JTAG? flash? network?) and mitigations — one page, reviewed with a peer."
+    ],
+    gotchas: [
+      "Encryption without authentication lets attackers FLIP BITS in a bitstream they can't read — you need both, and you need to know why.",
+      "eFUSE keys are one-shot: a provisioning-script bug bricks real inventory; rehearse on sacrificial units with a written procedure.",
+      "Debug hooks (JTAG, ILA, UART consoles) left enabled in production are the attack surface — release checklists must strip them explicitly."
+    ],
+    practices: [
+      "Security decisions (keys, lockdown, update authentication) are product decisions made early with stakeholders — retrofitted security is theater.",
+      "Separate development and production keys/flows from day one; never let dev keys near real units."
+    ]
+  },
+  {
+    id: "t-safety", title: "Safety-critical & radiation (DO-254 / space) (domain option)", kind: "opt",
+    summary: "Aerospace, medical, automotive: requirements traceability, verification independence, SEU mitigation (TMR, scrubbing) — a distinct and deep career track.",
+    learn: [
+      "DO-254 shape: design assurance levels, planning, traceability requirements→design→test, independence",
+      "ISO 26262 / IEC 61508 awareness for automotive/industrial",
+      "SEU physics on SRAM FPGAs: configuration vs user-memory upsets",
+      "Mitigation: TMR (module vs local), configuration scrubbing, ECC everywhere, safe-state FSMs",
+      "Rad-tolerant device options (flash-based, rad-hard families)"
+    ],
+    resources: [
+      { t: "doc", label: "NASA / ESA FPGA reliability guidelines (public)", url: "https://nepp.nasa.gov" },
+      { t: "doc", label: "AMD SEM (Soft Error Mitigation) IP documentation", url: "https://docs.amd.com" }
+    ],
+    exercises: [
+      "Apply TMR to your traffic-light FSM with majority voters and a mismatch-detection output; inject faults in simulation (force a state register) and verify recovery.",
+      "Write a requirements-traceability matrix for the FIFO: 10 requirements, each traced to design element, verification method, and result — feel the documentation weight of this world."
+    ],
+    gotchas: [
+      "TMR without INDEPENDENT voters and separated placement can be voted away by a single upset — naive TMR is false confidence.",
+      "Synthesis optimizers happily 'deduplicate' your triplicated logic back to one copy — TMR needs tool directives (`dont_touch`) and netlist verification."
+    ],
+    practices: [
+      "In safety work, the process artifacts (plans, traces, reviews) ARE the product as much as the RTL — budget accordingly and never backfill documentation."
+    ]
+  }
+  ]
+},
+{
+  id: "s9", title: "Expert Practice — SOPs, Leadership & Career", duration: "Ongoing",
+  goal: "Expertise is compounding habits: sign-off discipline, automation, review culture, mentoring, and a public body of work. This stage never ends — it's how senior engineers operate every week.",
+  milestone: [
+    "You maintain a personal (or team) sign-off checklist and IP library that make every project faster than the last.",
+    "Your projects run CI: lint, simulation regression, formal, and builds on every push.",
+    "You can design a system, defend it in review, mentor a junior through their first block, and debug anything with a method."
+  ],
+  topics: [
+  {
+    id: "t-signoff", title: "RTL sign-off checklist & release SOP", kind: "core",
+    summary: "The professional release gate: a written, versioned checklist that every bitstream passes before it ships — the distillation of every past failure.",
+    learn: [
+      "Sign-off dimensions: lint clean, CDC clean, timing with margin, zero critical warnings, constraints reviewed, utilization headroom, power in budget",
+      "Verification gates: plan coverage closed, regressions green N-consecutive nights, waivers reviewed",
+      "Release artifacts: tagged sources, checkpoint, all reports, bitstream with embedded version, release notes",
+      "ECO discipline: what re-verification a 'small change' actually requires",
+      "Post-release: archive everything needed to reproduce and debug the build in 5 years"
+    ],
+    resources: [
+      { t: "doc", label: "UG949 methodology checklists (adapt, don't adopt blindly)", url: "https://docs.amd.com/r/en-US/ug949-vivado-design-methodology" },
+      { t: "site", label: "Sutherland/Cummings papers as checklist source material", url: "http://www.sunburst-design.com/papers/" }
+    ],
+    exercises: [
+      "Write YOUR sign-off checklist (v1, ~30 items) from everything in this roadmap; run your best project through it and record the failures honestly.",
+      "Design the release-artifact folder structure and automate its population in your build script.",
+      "Simulate an ECO: change one FIFO depth in a 'released' design and enumerate exactly which checks must rerun (spoiler: more than you'd like)."
+    ],
+    gotchas: [
+      "Checklists that live in someone's head die with turnover; checklists that live in a wiki and aren't enforced by CI rot — bind checks to automation wherever possible.",
+      "'It's just a constant change' has shipped more broken bitstreams than any complex refactor — ECO discipline exists because small changes get small attention."
+    ],
+    practices: [
+      "Every field failure and late bug adds a checklist item — the checklist is your organization's scar tissue, keep it alive.",
+      "Bitstream = git hash, always: embedded version register + tagged repo + archived reports, no exceptions."
+    ]
+  },
+  {
+    id: "t-lint-cdc", title: "Lint, CDC & static sign-off tooling", kind: "core",
+    summary: "Automated static analysis as continuous guardrails: linters, CDC/RDC checkers, and methodology DRCs — catching bug classes before simulation.",
+    learn: [
+      "Lint tooling: Verilator --lint-only, Verible, vendor lint; rule selection & tuning",
+      "Commercial static sign-off awareness: SpyGlass/Questa Lint & CDC/Ascent — what enterprises expect",
+      "RDC (reset domain crossing) as CDC's sibling",
+      "Waiver management: structured, justified, expiring",
+      "Custom checks: naming conventions, banned constructs, structural rules via scripts"
+    ],
+    resources: [
+      { t: "tool", label: "Verible (lint/format for SV)", url: "https://github.com/chipsalliance/verible" },
+      { t: "tool", label: "Verilator", url: "https://verilator.org" }
+    ],
+    exercises: [
+      "Stand up Verible + Verilator lint with a tuned ruleset on your best repo; drive violations to zero (fix or documented waiver).",
+      "Write one custom structural check (e.g., 'every module has a `_tb` file' or 'no latches anywhere') as a CI script.",
+      "Take your CDC-heavy design through report_cdc and produce a zero-unexplained-items report with a waiver table."
+    ],
+    gotchas: [
+      "A linter with 400 firing rules gets ignored; a linter with 40 enforced rules gets respected — curate ruthlessly, then enforce absolutely.",
+      "Lint-clean ≠ correct: static tools catch bug CLASSES, not logic errors — they buy simulation time back, they don't replace it."
+    ],
+    practices: [
+      "Lint runs pre-commit or in PR CI — violations never merge; new rules get introduced with a cleanup, not aspirationally."
+    ]
+  },
+  {
+    id: "t-ci", title: "CI/CD for FPGA projects", kind: "core",
+    summary: "Push → lint → simulate → formal → build → artifact, automatically. Regression discipline turns 'I think it still works' into 'CI says it works'.",
+    learn: [
+      "Pipeline design: fast gates (lint, unit sims) on PR; heavy jobs (full regression, bitstream) nightly",
+      "Containerized EDA environments; open-source in cloud CI vs licensed tools on runners",
+      "Result reporting: JUnit-style sim results, coverage trends, QoR dashboards",
+      "Artifact management: versioned bitstreams, reports, release bundles",
+      "Hardware-in-the-loop CI: automated board farms (aspirational → practical)"
+    ],
+    resources: [
+      { t: "site", label: "cocotb + GitHub Actions examples (many public repos)", url: "https://github.com/cocotb/cocotb" },
+      { t: "tool", label: "FuseSoC/Edalize for tool-agnostic automation", url: "https://github.com/olofk/fusesoc" }
+    ],
+    exercises: [
+      "Set up full CI on your flagship repo: lint + Verilator/Icarus regressions + SymbiYosys formal on every push; nightly Vivado build (if licensing allows) publishing WNS/utilization as a badge or trend file.",
+      "Add a hardware smoke test if you can keep a board attached to a runner: program, run built-in self-test, report.",
+      "Break the design subtly on a branch and confirm CI catches it at the cheapest possible stage."
+    ],
+    gotchas: [
+      "A 4-hour PR pipeline means engineers stop making PRs — tier your gates by cost; the slow truth belongs in nightly, the fast truth in PR.",
+      "Vendor tool licensing/containers in CI is real friction — solve it once, document it, or your 'CI' quietly becomes lint-only."
+    ],
+    practices: [
+      "Green nightly regression is a team's heartbeat: broken nightly is an all-hands-stop event, fixed before new work.",
+      "Every merge to main is releasable in principle: builds, passes, versioned."
+    ]
+  },
+  {
+    id: "t-review", title: "Design & code review culture", kind: "core",
+    summary: "Reviews are where team quality is manufactured: what to review (architecture, constraints, CDC — not just RTL style), how to give and take critique, and how to run reviews that find bugs.",
+    learn: [
+      "Review tiers: architecture review (before RTL), RTL review, constraints/CDC review, verification-plan review",
+      "What experienced reviewers look for: interfaces, error paths, corner cases, CDC, reset — not indentation",
+      "Reviewing constraints: every exception challenged and justified",
+      "Giving critique that lands; receiving critique without ego",
+      "Checklists per review type; review records as project artifacts"
+    ],
+    resources: [
+      { t: "book", label: "Wiegers — Peer Reviews in Software (transfers directly)" },
+      { t: "paper", label: "Publicly available HDL style guides (lowRISC Verilog style guide) as review baselines", url: "https://github.com/lowRISC/style-guides" }
+    ],
+    exercises: [
+      "Review a real open-source FPGA PR (many projects welcome it): write findings ranked by severity — protocol/CDC/reset issues first, style last.",
+      "Have someone review your best module; count how many findings surprise you (calibration for humility).",
+      "Write your team-of-one style guide: 2 pages, the rules you actually follow; adopt lowRISC's for anything you haven't decided."
+    ],
+    gotchas: [
+      "Style-only reviews create the illusion of rigor while CDC bugs sail through — put the dangerous stuff (crossings, constraints, error paths) FIRST on the checklist.",
+      "A review that approves everything teaches nothing; a review that nitpicks everything gets routed around — severity-ranked findings keep reviews alive."
+    ],
+    practices: [
+      "No RTL enters main without review — including (especially) the tech lead's.",
+      "Constraint files get MORE review scrutiny than RTL: a bad exception is invisible in every downstream check."
+    ]
+  },
+  {
+    id: "t-docs", title: "Specs, docs & register-map engineering", kind: "core",
+    summary: "Writing the documents that multiply your work: micro-architecture specs, interface contracts, and machine-readable register maps generating RTL/driver/docs from one source.",
+    learn: [
+      "The micro-architecture spec: block diagram, interfaces, latency/throughput, clock/reset, error handling — 2–6 pages that prevent weeks of rework",
+      "Interface contracts: timing diagrams (WaveDrom), protocol assumptions, error semantics",
+      "Register-map single-sourcing: SystemRDL/YAML → RTL, C headers, DT snippets, docs",
+      "Design decision records: capturing WHY for the engineer-in-5-years (you)",
+      "Diagrams as code: WaveDrom, Mermaid/Graphviz for block diagrams — versionable, diffable"
+    ],
+    resources: [
+      { t: "tool", label: "WaveDrom — timing diagrams from JSON", url: "https://wavedrom.com" },
+      { t: "tool", label: "PeakRDL / SystemRDL toolchain", url: "https://peakrdl.readthedocs.io" }
+    ],
+    exercises: [
+      "Write the micro-architecture spec for your DMA or UART as if handing it to another engineer to build; then actually gap-check it against what you built.",
+      "Convert one project's register map to SystemRDL/PeakRDL; generate RTL + header + docs, and wire generation into the build.",
+      "Document one non-obvious design decision you made (why FIFO not handshake? why 3 pipeline stages?) as a half-page decision record."
+    ],
+    gotchas: [
+      "Docs written after the fact document what IS, not what was INTENDED — the spec's value is mostly in writing it before, when it changes decisions.",
+      "Hand-maintained register documentation is wrong within a month — if it's not generated from the same source as the RTL, it's fiction with formatting."
+    ],
+    practices: [
+      "Spec-before-RTL for anything over a few hundred lines; 30 minutes of spec kills days of rework.",
+      "All docs live in the repo, versioned with the code they describe."
+    ]
+  },
+  {
+    id: "t-portfolio", title: "Portfolio projects & open source", kind: "core",
+    summary: "A public body of work: substantial projects that prove the whole stack — and the fastest credibility signal in hiring and community.",
+    learn: [
+      "Portfolio design: 2–3 deep projects beat 15 blinky repos",
+      "Project anatomy that impresses: README with architecture diagram, verification story, CI badges, measured results on hardware",
+      "Contributing to established projects (LiteX, verilog-ethernet, cocotb, yosys) — smaller footprint, higher signal",
+      "Writing about your work: build logs, post-mortems, tutorials"
+    ],
+    resources: [
+      { t: "site", label: "Awesome-HDL / awesome FPGA lists for project inspiration", url: "https://github.com/drom/awesome-hdl" },
+      { t: "site", label: "Tiny Tapeout — actually tape out silicon cheaply", url: "https://tinytapeout.com" }
+    ],
+    exercises: [
+      "Capstone options (pick one, take it to hardware + writeup): a pipelined RISC-V core (RV32I) booting real code; a 100M/1G Ethernet packet engine with a UDP stack; a real-time video pipeline with DDR frame buffer; a logic analyzer with PC-side UI.",
+      "Give your best repo the full professional treatment: spec, CI, formal on leaf blocks, measured-on-hardware results table, honest limitations section.",
+      "Submit one fix or feature upstream to an open-source HDL project and shepherd it through review."
+    ],
+    gotchas: [
+      "An unverified portfolio project is an anti-signal to hiring managers who know — the verification story IS the impressive part.",
+      "Forked-tutorial repos with your name on them fool no one; depth on one real thing beats breadth on twenty."
+    ],
+    practices: [
+      "Every project README answers in 30 seconds: what it does, how it's verified, what hardware it ran on, what the numbers are."
+    ]
+  },
+  {
+    id: "t-interview", title: "Interviews & career navigation", kind: "core",
+    summary: "Converting skill into roles: the standard interview gauntlet (whiteboard RTL, CDC questions, verification scenarios), role flavors, and choosing between design/verification/architecture tracks.",
+    learn: [
+      "The canonical question set: async FIFO on a whiteboard, 2-FF sync and why, FSM design live, setup/hold math, 'debug this waveform', AXI channel rules",
+      "Role flavors: RTL design, DV (design verification), FPGA systems/integration, emulation, apps engineering — different daily lives",
+      "Levels & trajectories: what senior/staff actually means (scope, ambiguity, mentoring — not just years)",
+      "Industry map: aerospace/defense, HFT, telecom, semiconductors, instrumentation, startups — culture and comp patterns",
+      "Negotiation basics and evaluating teams (ask about their verification and review culture — their answers reveal everything)"
+    ],
+    resources: [
+      { t: "site", label: "Sunburst papers again — interview questions are drawn from them shamelessly", url: "http://www.sunburst-design.com/papers/" },
+      { t: "site", label: "r/FPGA + community wikis (interview threads, salary datapoints)", url: "https://www.reddit.com/r/FPGA/" }
+    ],
+    exercises: [
+      "Whiteboard (paper, no tools) from memory: async FIFO with Gray pointers, 2-FF synchronizer with MTBF explanation, and a UART RX FSM — weekly until fluent.",
+      "Mock interview with a peer: one hour, one design problem, thinking out loud — record and cringe-review.",
+      "Write your 'debug story' (STAR format): a real hard bug, your method, the root cause — the single most predictive interview answer."
+    ],
+    gotchas: [
+      "Interviewers probe the boundaries of your knowledge on purpose — 'I don't know, but here's how I'd find out' beats bluffing every time; bluffing CDC answers is instantly fatal.",
+      "Optimizing for prestige over mentorship early is a classic mistake: your first 3 years' growth rate is set by who reviews your work."
+    ],
+    practices: [
+      "Keep a brag document: bugs found, designs shipped, numbers achieved — reviews and interviews both feed on specifics.",
+      "Stay current sustainably: conference talks (DVCon, FPGA conference), a few quality blogs (ZipCPU, Project F), one community — not firehose consumption."
+    ]
+  },
+  {
+    id: "t-mentoring", title: "Mentoring & technical leadership", kind: "adv",
+    summary: "The final multiplier: growing other engineers, running effective design processes, and owning outcomes bigger than your own keyboard.",
+    learn: [
+      "Mentoring craft: calibrated tasks, reviewing to teach (questions over corrections), letting people struggle productively",
+      "Running design reviews and post-mortems that people don't dread",
+      "Estimation for FPGA work: why it's hard (timing closure tails, lab surprises) and how to do it honestly (ranges + confidence)",
+      "Technical strategy: build vs buy vs open-source; platform choices with 5-year consequences",
+      "Blameless post-mortem culture for field failures"
+    ],
+    resources: [
+      { t: "book", label: "Fournier — The Manager's Path (tech-lead chapters apply to ICs)" },
+      { t: "book", label: "Winters/Manshreck/Wright — Software Engineering at Google (reviews, testing culture — transfers well)" }
+    ],
+    exercises: [
+      "Mentor one person through their first FPGA project (a colleague, a student, a forum regular) — notice how teaching exposes your own gaps.",
+      "Run a post-mortem on your own worst project failure using a blameless template; extract 3 process changes, implement them.",
+      "Estimate your next project with 3-point estimates per task; afterward, compare actuals and write down your personal bias factor."
+    ],
+    gotchas: [
+      "Doing it yourself because it's faster is true this week and catastrophic this year — the senior trap.",
+      "Estimates given as single numbers become commitments; ranges with assumptions survive contact with timing closure."
+    ],
+    practices: [
+      "Your legacy is the engineers you grew and the SOPs you left behind, not the cleverest RTL you wrote — allocate time accordingly."
+    ]
+  }
+  ]
+}
+];
+
+/* =====================================================================
+   RENDERING
+   ===================================================================== */
+const $ = (s, el=document) => el.querySelector(s);
+const doneSet = new Set(JSON.parse(localStorage.getItem("fpga-roadmap-done") || "[]"));
+
+function saveDone() {
+  localStorage.setItem("fpga-roadmap-done", JSON.stringify([...doneSet]));
+  updateProgress();
+}
+function totalTopics() {
+  return ROADMAP.reduce((n, s) => n + s.topics.length, 0);
+}
+function updateProgress() {
+  const pct = totalTopics() ? (doneSet.size / totalTopics()) * 100 : 0;
+  $("#progressFill").style.width = pct.toFixed(1) + "%";
+}
+
+function render() {
+  const root = $("#roadmap");
+  root.innerHTML = "";
+  ROADMAP.forEach((stage, si) => {
+    const sec = document.createElement("section");
+    sec.className = "stage";
+
+    const head = document.createElement("div");
+    head.className = "stage-head";
+    head.innerHTML = `<h2>${si}. ${stage.title}</h2>
+      <div class="meta">${stage.duration} · ${stage.topics.length} topics</div>`;
+    head.addEventListener("click", () => openStage(stage, si));
+    sec.appendChild(head);
+
+    const grid = document.createElement("div");
+    grid.className = "topics";
+    const left = document.createElement("div");  left.className = "col left";
+    const right = document.createElement("div"); right.className = "col right";
+    stage.topics.forEach((t, i) => {
+      const chip = document.createElement("div");
+      chip.className = "topic " + (t.kind || "core") + (doneSet.has(t.id) ? " done" : "");
+      chip.textContent = t.title;
+      chip.dataset.id = t.id;
+      chip.addEventListener("click", () => openTopic(stage, si, t));
+      (i % 2 === 0 ? left : right).appendChild(chip);
+    });
+    grid.appendChild(left); grid.appendChild(right);
+    sec.appendChild(grid);
+    root.appendChild(sec);
+  });
+  updateProgress();
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function inline(s) {
+  /* allow `code` spans in content strings */
+  return esc(s).replace(/`([^`]+)`/g, "<code>$1</code>");
+}
+
+function listSection(title, items, cls) {
+  if (!items || !items.length) return "";
+  return `<section><h4>${title}</h4><ul>` +
+    items.map(x => `<li class="${cls||""}">${inline(x)}</li>`).join("") +
+    `</ul></section>`;
+}
+
+function resSection(resources) {
+  if (!resources || !resources.length) return "";
+  return `<section><h4>References &amp; resources</h4><ul>` +
+    resources.map(r => {
+      const label = r.url
+        ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.label)}</a>`
+        : esc(r.label);
+      return `<li><span class="res-type">${esc(r.t)}</span>${label}</li>`;
+    }).join("") + `</ul></section>`;
+}
+
+function openTopic(stage, si, t) {
+  $("#dStage").textContent = `Stage ${si} · ${stage.title}`;
+  $("#dTitle").textContent = t.title;
+  const done = doneSet.has(t.id);
+  $("#dBody").innerHTML =
+    `<section><p class="summary">${inline(t.summary || "")}</p></section>` +
+    listSection("What to learn", t.learn) +
+    resSection(t.resources) +
+    listSection("Exercises & projects", t.exercises, "exercise") +
+    listSection("Corner cases & gotchas", t.gotchas, "gotcha") +
+    listSection("Best practices / SOP", t.practices) +
+    `<button class="mark-done" id="markBtn">${done ? "Mark as not done" : "Mark as done ✔"}</button>`;
+  $("#markBtn").addEventListener("click", () => {
+    doneSet.has(t.id) ? doneSet.delete(t.id) : doneSet.add(t.id);
+    saveDone(); render(); openTopic(stage, si, t);
+  });
+  openDrawer();
+}
+
+function openStage(stage, si) {
+  $("#dStage").textContent = `Stage ${si}`;
+  $("#dTitle").textContent = stage.title;
+  $("#dBody").innerHTML =
+    `<section><p class="summary">${inline(stage.goal || "")}</p></section>` +
+    `<section><h4>Suggested duration</h4><p>${esc(stage.duration)}</p></section>` +
+    `<section><h4>Topics in this stage</h4><div class="pill-row">` +
+    stage.topics.map(t => `<span class="pill">${esc(t.title)}</span>`).join("") +
+    `</div></section>` +
+    (stage.milestone ? listSection("Stage milestone — you are ready to move on when…", stage.milestone) : "");
+  openDrawer();
+}
+
+function openDrawer() { $("#drawer").classList.add("open"); $("#overlay").classList.add("open"); }
+function closeDrawer() { $("#drawer").classList.remove("open"); $("#overlay").classList.remove("open"); }
+$("#overlay").addEventListener("click", closeDrawer);
+$("#dClose").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+
+render();
+</script>
+</body>
+</html>
