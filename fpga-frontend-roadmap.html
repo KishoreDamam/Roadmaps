@@ -186,6 +186,27 @@
     border-radius: 8px; padding: 6px 14px; font-weight: 600; cursor: pointer;
   }
 
+  /* ---------- Free courses & YouTube library ---------- */
+  .libwrap { max-width: 1080px; margin: 0 auto 60px; padding: 0 16px; }
+  .lib-head {
+    margin: 0 auto 8px; width: fit-content; max-width: 92%;
+    background: var(--node); border: 2.5px solid var(--node-border); border-radius: 12px;
+    padding: 12px 26px; text-align: center; box-shadow: var(--shadow);
+  }
+  .lib-head h2 { font-size: 1.15rem; }
+  .lib-head .meta { font-size: .78rem; opacity: .75; }
+  .lib-intro { text-align: center; color: var(--muted); font-size: .9rem; max-width: 720px; margin: 10px auto 22px; }
+  .lib-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .lib-card {
+    background: var(--card); border: 2px solid var(--node-border); border-radius: 12px;
+    padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .lib-card h3 { font-size: .95rem; margin-bottom: 10px; }
+  .lib-card ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .lib-card li { font-size: .86rem; line-height: 1.45; }
+  .lib-card li .note { color: var(--muted); }
+  .lib-card li b { font-weight: 650; }
+
   footer {
     text-align: center; color: var(--muted); font-size: .85rem; padding: 30px 16px 50px;
   }
@@ -213,6 +234,8 @@
 </header>
 
 <main class="roadmap" id="roadmap"></main>
+
+<section class="libwrap" id="library"></section>
 
 <div class="overlay" id="overlay"></div>
 <aside class="drawer" id="drawer" aria-modal="true" role="dialog">
@@ -383,6 +406,7 @@ const ROADMAP = [
     resources: [
       { t: "book", label: "Harris & Harris — Ch. 6–8 (Architecture & Microarchitecture)" },
       { t: "course", label: "MIT 6.004 Computation Structures (OCW)", url: "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/" },
+      { t: "video", label: "Onur Mutlu — Digital Design & Computer Architecture, full ETH lectures (free)", url: "https://www.youtube.com/@OnurMutluLectures" },
       { t: "site", label: "RISC-V ISA specifications", url: "https://riscv.org/technical/specifications/" }
     ],
     exercises: [
@@ -479,6 +503,8 @@ const ROADMAP = [
       { t: "site", label: "HDLBits — interactive Verilog problems with instant feedback", url: "https://hdlbits.01xz.net/wiki/Main_Page" },
       { t: "book", label: "Pong Chu — FPGA Prototyping by SystemVerilog Examples", url: "https://www.wiley.com/en-us/FPGA+Prototyping+by+SystemVerilog+Examples-p-9781119282662" },
       { t: "site", label: "ChipVerify SystemVerilog tutorial", url: "https://www.chipverify.com/systemverilog/systemverilog-tutorial" },
+      { t: "video", label: "Digi-Key 'Introduction to FPGA' — Shawn Hymel 12-part video series", url: "https://www.youtube.com/playlist?list=PLEBQazB0HUyT1WmMONxRZn9NmQ_9CIKhb" },
+      { t: "video", label: "Nandland YouTube channel (Verilog basics with hardware demos)", url: "https://www.youtube.com/c/Nandland" },
       { t: "paper", label: "Cummings — 'Nonblocking Assignments in Verilog Synthesis, Coding Styles That Kill!' (SNUG)", url: "http://www.sunburst-design.com/papers/CummingsSNUG2000SJ_NBA.pdf" },
       { t: "tool", label: "EDA Playground — run simulations in the browser", url: "https://www.edaplayground.com" }
     ],
@@ -903,7 +929,8 @@ const ROADMAP = [
       { t: "tool", label: "Yosys", url: "https://yosyshq.net/yosys/" },
       { t: "tool", label: "nextpnr", url: "https://github.com/YosysHQ/nextpnr" },
       { t: "site", label: "iCEBreaker FPGA board + examples", url: "https://icebreaker-fpga.org" },
-      { t: "site", label: "F4PGA / open FPGA tooling umbrella", url: "https://f4pga.org" }
+      { t: "site", label: "F4PGA / open FPGA tooling umbrella", url: "https://f4pga.org" },
+      { t: "video", label: "Matt Venn — Zero to ASIC / open-silicon videos & FOSSi conference talks", url: "https://zerotoasiccourse.com" }
     ],
     exercises: [
       "Take your UART through yosys+nextpnr to an iCE40 (or simulate the flow) and inspect the mapped netlist with `yosys show`.",
@@ -1030,7 +1057,8 @@ const ROADMAP = [
     resources: [
       { t: "doc", label: "AMD UG892 — Vivado Design Flows Overview", url: "https://docs.amd.com/r/en-US/ug892-vivado-design-flows-overview" },
       { t: "doc", label: "AMD UG835 — Tcl Command Reference", url: "https://docs.amd.com/r/en-US/ug835-vivado-tcl-commands" },
-      { t: "video", label: "Adam Taylor's MicroZed Chronicles (blog series)", url: "https://www.adiuvoengineering.com/microzed-chronicles" }
+      { t: "video", label: "Adam Taylor's MicroZed Chronicles (blog series)", url: "https://www.adiuvoengineering.com/microzed-chronicles" },
+      { t: "video", label: "Vipin Kizheppatt — 100+ hands-on Vivado video labs (free)", url: "https://www.youtube.com/@Vipinkmenon" }
     ],
     exercises: [
       "Do one full project in the GUI while reading `vivado.jou`; then reproduce the identical flow as a standalone Tcl script.",
@@ -1486,6 +1514,7 @@ const ROADMAP = [
     resources: [
       { t: "site", label: "Verification Academy — UVM Cookbook (the standard reference)", url: "https://verificationacademy.com/cookbook/uvm-universal-verification-methodology" },
       { t: "site", label: "ClueLogic — 'UVM Tutorial for Candy Lovers' (gentlest on-ramp)", url: "https://cluelogic.com/2011/07/uvm-tutorial-for-candy-lovers-overview/" },
+      { t: "video", label: "Verification Academy — 'UVM Basics' free video course (register free)", url: "https://verificationacademy.com/courses/uvm-basics" },
       { t: "doc", label: "Accellera UVM 1.2 / IEEE 1800.2 reference", url: "https://accellera.org/downloads/standards/uvm" }
     ],
     exercises: [
@@ -1550,6 +1579,7 @@ const ROADMAP = [
     resources: [
       { t: "tool", label: "SymbiYosys (sby) — open-source formal front-end", url: "https://symbiyosys.readthedocs.io" },
       { t: "site", label: "ZipCPU formal verification tutorials (the best free intro)", url: "https://zipcpu.com/tutorial/" },
+      { t: "video", label: "Robert Baruch — formal verification video series (SymbiYosys, live coding)", url: "https://www.youtube.com/@RobertBaruch" },
       { t: "book", label: "Seligman/Schubert/Kumar — Formal Verification: An Essential Toolkit" }
     ],
     exercises: [
@@ -1708,6 +1738,7 @@ const ROADMAP = [
     resources: [
       { t: "site", label: "sigrok/PulseView — open-source LA software", url: "https://sigrok.org" },
       { t: "video", label: "Keysight/Tektronix 'scope fundamentals' series (free)", url: "https://www.youtube.com/user/KeysightOscilloscope" },
+      { t: "video", label: "EEVblog — oscilloscope & probing tutorials, lab craft", url: "https://www.youtube.com/@EEVblog" },
       { t: "book", label: "Johnson & Graham — High-Speed Digital Design (the 'black magic' book, selected chapters)" }
     ],
     exercises: [
@@ -1956,7 +1987,8 @@ const ROADMAP = [
     resources: [
       { t: "book", label: "Mindshare — PCI Express Technology 3.0 (Budruk et al.)" },
       { t: "doc", label: "AMD PG054/PG213 (PCIe hard block) + XDMA PG195", url: "https://docs.amd.com" },
-      { t: "site", label: "FPGADrive / Xillybus tutorials for first bring-up", url: "https://xillybus.com/doc" }
+      { t: "site", label: "FPGADrive / Xillybus tutorials for first bring-up", url: "https://xillybus.com/doc" },
+      { t: "video", label: "Vipin Kizheppatt — PCIe/XDMA video tutorials (endpoint bring-up to DMA)", url: "https://www.youtube.com/@Vipinkmenon" }
     ],
     exercises: [
       "Bring up a PCIe endpoint with XDMA-class IP on a host machine: enumerate (lspci -vvv), map a BAR, and read a version register from userspace.",
@@ -2057,7 +2089,8 @@ const ROADMAP = [
     resources: [
       { t: "doc", label: "AMD UG585 — Zynq-7000 TRM (the reference; learn to navigate it)", url: "https://docs.amd.com/r/en-US/ug585-zynq-7000-SoC-TRM" },
       { t: "book", label: "The Zynq Book (free PDF)", url: "http://www.zynqbook.com" },
-      { t: "site", label: "Adam Taylor MicroZed Chronicles (400+ articles)", url: "https://www.adiuvoengineering.com/microzed-chronicles" }
+      { t: "site", label: "Adam Taylor MicroZed Chronicles (400+ articles)", url: "https://www.adiuvoengineering.com/microzed-chronicles" },
+      { t: "video", label: "Vipin Kizheppatt — Zynq video tutorial series (PS/PL, AXI, DMA, step by step)", url: "https://www.youtube.com/@Vipinkmenon" }
     ],
     exercises: [
       "Build the canonical first system: custom AXI-Lite peripheral (your UART or a math block) on a GP port, controlled from a bare-metal app.",
@@ -2148,7 +2181,8 @@ const ROADMAP = [
     resources: [
       { t: "book", label: "Lyons — Understanding Digital Signal Processing (the friendly classic)" },
       { t: "book", label: "Harris — Multirate Signal Processing for Communication Systems" },
-      { t: "site", label: "ZipCPU DSP posts (filters, CORDIC)", url: "https://zipcpu.com/topics.html" }
+      { t: "site", label: "ZipCPU DSP posts (filters, CORDIC)", url: "https://zipcpu.com/topics.html" },
+      { t: "video", label: "Cornell ECE 5760 (Bruce Land) — SoC-FPGA + DSP lectures, all free", url: "https://people.ece.cornell.edu/land/courses/ece5760/" }
     ],
     exercises: [
       "Design a 15-tap lowpass FIR: coefficients in Python, quantize to 16 bits, measure the frequency-response degradation, implement in RTL, and verify bit-exactly against the quantized model.",
@@ -2508,6 +2542,75 @@ const ROADMAP = [
 ];
 
 /* =====================================================================
+   FREE COURSES & YOUTUBE LIBRARY
+   Curated video/course resources. Stage tags map items back to the
+   roadmap stages they support.
+   ===================================================================== */
+const LIBRARY = [
+{
+  cat: "Structured free courses",
+  items: [
+    { label: "Nand2Tetris (Coursera / nand2tetris.org)", url: "https://www.nand2tetris.org",
+      note: "Build a computer from NAND gates to Tetris. The best foundations course ever made; free to audit. → Stage 0" },
+    { label: "Onur Mutlu Lectures — Digital Design & Computer Architecture (ETH Zürich)", url: "https://www.youtube.com/@OnurMutluLectures",
+      note: "Entire university semesters on YouTube, including Verilog and FPGA labs — world-class and completely free. → Stages 0–1" },
+    { label: "MIT 6.004 Computation Structures (OpenCourseWare)", url: "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/",
+      note: "Digital logic through CPU design with videos, labs, and problem sets. → Stage 0" },
+    { label: "FPGA Design for Embedded Systems — CU Boulder (Coursera)", url: "https://www.coursera.org/specializations/fpga-design",
+      note: "4-course specialization: design flow, Verilog/VHDL, DSP on FPGA. Free to audit. → Stages 1–3" },
+    { label: "Building a RISC-V CPU Core — Linux Foundation (edX, free)", url: "https://www.edx.org",
+      note: "Build a pipelined RISC-V core in your browser (Makerchip, TL-Verilog) in a weekend. Search 'Building a RISC-V CPU Core'. → Stages 1, 9 capstone warm-up" },
+    { label: "Cornell ECE 5760 — Bruce Land (lectures on YouTube)", url: "https://people.ece.cornell.edu/land/courses/ece5760/",
+      note: "Legendary SoC-FPGA course: DE1-SoC, DSP, HPS/fabric projects, all lectures free. A true hidden gem. → Stages 7–8" },
+    { label: "Verification Academy (free registration)", url: "https://verificationacademy.com",
+      note: "The industry's free training library: SystemVerilog, UVM, coverage, CDC, formal — video courses + cookbook. → Stage 5" },
+    { label: "Bootlin embedded Linux & kernel courses (free materials)", url: "https://bootlin.com/docs/",
+      note: "Professional-grade embedded Linux training: slides, labs, videos. → Stage 8" },
+    { label: "MIT Missing Semester", url: "https://missing.csail.mit.edu/",
+      note: "Shell, Git, scripting, debugging — the tooling fluency layer. Lecture videos included. → Stage 0" }
+  ]
+},
+{
+  cat: "YouTube channels — FPGA & RTL design",
+  items: [
+    { label: "Nandland (Russell Merrick)", url: "https://www.youtube.com/c/Nandland",
+      note: "Beginner-friendly Verilog/VHDL and FPGA concepts; pairs with his book 'Getting Started with FPGAs'. → Stages 1–2" },
+    { label: "Digi-Key: 'Introduction to FPGA' — Shawn Hymel (12-part series)", url: "https://www.youtube.com/playlist?list=PLEBQazB0HUyT1WmMONxRZn9NmQ_9CIKhb",
+      note: "Verilog + iCE40 + open-source tools from zero to a working design — the best modern on-ramp series. → Stages 1–3" },
+    { label: "FPGAs for Beginners (Stacey)", url: "https://www.youtube.com/@FPGAsforBeginners",
+      note: "SystemVerilog series and project walkthroughs with great pacing. → Stages 1, 4" },
+    { label: "Vipin Kizheppatt", url: "https://www.youtube.com/@Vipinkmenon",
+      note: "100+ hands-on Vivado labs: Zynq, AXI, DMA, MicroBlaze, PCIe/XDMA. Arguably the best free Vivado lab library on the internet. → Stages 3, 7–8" },
+    { label: "Adiuvo Engineering (Adam Taylor)", url: "https://www.youtube.com/@adiuvoengineering",
+      note: "Zynq/Versal, MicroZed Chronicles companion videos, professional practice. → Stages 6, 8" },
+    { label: "Robert Baruch", url: "https://www.youtube.com/@RobertBaruch",
+      note: "Builds RISC-V CPUs from scratch on camera; the formal-verification playlist (SymbiYosys) is a hidden gem. → Stages 5, 9" },
+    { label: "Ben Eater", url: "https://eater.net",
+      note: "Breadboard computer from chips up — unbeatable intuition for digital logic. → Stage 0" },
+    { label: "Matt Venn — Zero to ASIC / Tiny Tapeout", url: "https://zerotoasiccourse.com",
+      note: "Open-source silicon flow (yosys/OpenLane); tape out your own chip. → Stages 2, 9" }
+  ]
+},
+{
+  cat: "YouTube channels — lab, hardware & ecosystem",
+  items: [
+    { label: "EEVblog (Dave Jones)", url: "https://www.youtube.com/@EEVblog",
+      note: "Oscilloscope fundamentals, probing technique, lab craft, teardown culture — the Stage 6 companion channel. → Stage 6" },
+    { label: "Phil's Lab", url: "https://www.youtube.com/@PhilsLab",
+      note: "PCB/hardware design including FPGA boards and signal integrity — bridges RTL to the physical board. → Stages 2, 6" },
+    { label: "AMD/Xilinx official channel", url: "https://www.youtube.com/@XilinxInc",
+      note: "Tool how-tos, Vivado/Vitis workshops, Versal deep dives. → Stage 3" },
+    { label: "Intel FPGA official channel", url: "https://www.youtube.com/@IntelFPGA",
+      note: "Quartus flows, Platform Designer, transceiver training. → Stage 3" },
+    { label: "FOSSi Foundation (ORConf / Latch-Up talks)", url: "https://www.youtube.com/@FOSSiFoundation",
+      note: "Conference talks on yosys internals, cocotb, RISC-V war stories, open EDA — where the open-hardware community shares real experience. → Stages 5, 9" },
+    { label: "DVCon / Accellera recorded talks", url: "https://dvcon-proceedings.org",
+      note: "Verification conference papers and talks — UVM patterns, SVA, coverage methodology from practitioners. → Stage 5" }
+  ]
+}
+];
+
+/* =====================================================================
    RENDERING
    ===================================================================== */
 const $ = (s, el=document) => el.querySelector(s);
@@ -2556,6 +2659,23 @@ function render() {
     root.appendChild(sec);
   });
   updateProgress();
+}
+
+function renderLibrary() {
+  const root = $("#library");
+  root.innerHTML =
+    `<div class="lib-head"><h2>Bonus: Free Courses &amp; YouTube Hidden Gems</h2>
+       <div class="meta">Zero-cost, high-quality video learning mapped to the stages above</div></div>
+     <p class="lib-intro">Some of the best FPGA teaching ever produced is free on YouTube and open courseware.
+        Pick one channel per stage as your “video companion” — watch, then immediately build.</p>
+     <div class="lib-grid">` +
+    LIBRARY.map(c =>
+      `<div class="lib-card"><h3>${esc(c.cat)}</h3><ul>` +
+      c.items.map(i =>
+        `<li><b><a href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.label)}</a></b><br>
+         <span class="note">${esc(i.note)}</span></li>`).join("") +
+      `</ul></div>`).join("") +
+    `</div>`;
 }
 
 function esc(s) {
@@ -2623,6 +2743,7 @@ $("#dClose").addEventListener("click", closeDrawer);
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
 
 render();
+renderLibrary();
 </script>
 </body>
 </html>
