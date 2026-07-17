@@ -30,6 +30,7 @@ A complete zero-to-expert path for FPGA front-end engineering covering **design,
   - **Corner cases & gotchas** (the bugs that bite in the field)
   - **Best practices / SOPs** (how professionals actually work)
 - Topics tagged **core**, **advanced/specialization**, or **optional**
+- **★ 80/20 high-leverage markers**: the ~13 topics that deliver ~80% of real-world capability are starred and outlined for emphasis — nothing is hidden or skipped; the stars just show where to go deep first and spend disproportionate practice time
 - Per-stage milestones ("you're ready to move on when…")
 - Progress tracking with "Mark as done" (persisted in browser localStorage)
 - Light/dark theme aware, mobile responsive, fully self-contained (no external assets)

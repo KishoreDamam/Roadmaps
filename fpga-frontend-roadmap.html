@@ -19,6 +19,7 @@
     --accent: #4263eb;
     --good: #2b8a3e;
     --warn: #e8590c;
+    --star: #d9480f;
     --card: #ffffff;
     --code-bg: #f1f3f5;
     --shadow: 0 2px 6px rgba(0,0,0,.12);
@@ -38,6 +39,7 @@
       --accent: #91a7ff;
       --good: #69db7c;
       --warn: #ffa94d;
+      --star: #ffc078;
       --card: #1e2026;
       --code-bg: #2a2d35;
       --shadow: 0 2px 8px rgba(0,0,0,.5);
@@ -47,14 +49,14 @@
     --bg: #14151a; --ink: #e8e8e8; --muted: #9aa0aa; --node: #8d6e00;
     --node-border: #e8e8e8; --node-alt: #6b5400; --chip: #7a6300;
     --chip-optional: #2b2f36; --chip-adv: #1c3d5a; --line: #cfcfcf;
-    --accent: #91a7ff; --good: #69db7c; --warn: #ffa94d; --card: #1e2026;
+    --accent: #91a7ff; --good: #69db7c; --warn: #ffa94d; --star: #ffc078; --card: #1e2026;
     --code-bg: #2a2d35; --shadow: 0 2px 8px rgba(0,0,0,.5);
   }
   :root[data-theme="light"] {
     --bg: #f7f7f5; --ink: #1a1a1a; --muted: #6b7280; --node: #ffe599;
     --node-border: #2b2b2b; --node-alt: #fff3bf; --chip: #ffec99;
     --chip-optional: #e9ecef; --chip-adv: #d0ebff; --line: #2b2b2b;
-    --accent: #4263eb; --good: #2b8a3e; --warn: #e8590c; --card: #ffffff;
+    --accent: #4263eb; --good: #2b8a3e; --warn: #e8590c; --star: #d9480f; --card: #ffffff;
     --code-bg: #f1f3f5; --shadow: 0 2px 6px rgba(0,0,0,.12);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -83,6 +85,14 @@
   .legend i.core { background: var(--chip); }
   .legend i.adv  { background: var(--chip-adv); }
   .legend i.opt  { background: var(--chip-optional); }
+  .legend .star  { color: var(--star); font-size: 1.05rem; line-height: 1; }
+
+  .pareto {
+    max-width: 760px; margin: 16px auto 0; padding: 12px 18px;
+    background: var(--card); border: 2px solid var(--star); border-radius: 12px;
+    font-size: .9rem; box-shadow: var(--shadow);
+  }
+  .pareto b.s { color: var(--star); }
 
   .howto {
     max-width: 760px; margin: 10px auto 0; padding: 0 20px;
@@ -127,6 +137,10 @@
   .topic.done { opacity: .55; text-decoration: line-through; }
   .topic.adv { background: var(--chip-adv); }
   .topic.opt { background: var(--chip-optional); font-weight: 500; }
+  .topic.leverage {
+    outline: 2.5px solid var(--star); outline-offset: 2px;
+  }
+  .topic.leverage > .star { color: var(--star); margin-right: 4px; }
   .topic::after {
     content: ""; position: absolute; top: 50%; width: 46px;
     border-top: 2px dashed var(--line); opacity: .5;
@@ -181,6 +195,11 @@
   }
   .exercise { border-left: 3px solid var(--good); padding-left: 10px; }
   .gotcha  { border-left: 3px solid var(--warn); padding-left: 10px; }
+  .lev-note {
+    background: var(--code-bg); border: 1.5px solid var(--star); border-radius: 8px;
+    padding: 10px 12px; font-size: .9rem;
+  }
+  .lev-note b { color: var(--star); }
   .mark-done {
     margin-top: 6px; background: var(--chip); color: var(--ink); border: 2px solid var(--node-border);
     border-radius: 8px; padding: 6px 14px; font-weight: 600; cursor: pointer;
@@ -227,10 +246,18 @@
     <span><i class="core"></i> Core topic</span>
     <span><i class="adv"></i> Advanced / specialization</span>
     <span><i class="opt"></i> Optional / good to know</span>
+    <span><b class="star">★</b> High-leverage (80/20 focus)</span>
   </div>
   <p class="howto">Click any stage or topic to open details: what to learn, curated references,
      hands-on exercises, corner cases &amp; gotchas, and best practices. Use “Mark as done” to track progress
      (saved in your browser).</p>
+  <div class="pareto">
+    <b class="s">★ The 80/20 path.</b> The starred topics are the highest-leverage ~20% — the skills
+    that produce ~80% of real-world FPGA capability and show up in most interviews and daily work.
+    <b>Nothing here is skippable:</b> you still learn every topic on the way to mastery. The stars just tell you
+    where to go deep first and spend disproportionate practice time — Pareto is about effort and sequencing,
+    not omission.
+  </div>
 </header>
 
 <main class="roadmap" id="roadmap"></main>
@@ -2636,6 +2663,25 @@ const LIBRARY = [
 const $ = (s, el=document) => el.querySelector(s);
 const doneSet = new Set(JSON.parse(localStorage.getItem("fpga-roadmap-done") || "[]"));
 
+/* 80/20 high-leverage topics: the ~20% of topics that deliver ~80% of
+   real-world FPGA capability. These are EMPHASIZED (starred), never hidden
+   — every topic still matters for mastery. */
+const HIGH_LEVERAGE = new Set([
+  "t-seq",         // flip-flops, setup/hold, synchronous design
+  "t-sv-design",   // synthesizable SystemVerilog
+  "t-rtl-synth",   // code → hardware inference
+  "t-fsm",         // control logic
+  "t-tb-basics",   // self-checking testbenches
+  "t-sta",         // static timing analysis
+  "t-constraints", // XDC/SDC
+  "t-cdc",         // clock domain crossing
+  "t-asyncfifo",   // the rite of passage
+  "t-reports",     // reading timing/utilization reports
+  "t-ila",         // on-chip debug
+  "t-lowspeed",    // UART/SPI/I2C bring-up trinity
+  "t-axi"          // the system-design lingua franca
+]);
+
 function saveDone() {
   localStorage.setItem("fpga-roadmap-done", JSON.stringify([...doneSet]));
   updateProgress();
@@ -2668,8 +2714,11 @@ function render() {
     const right = document.createElement("div"); right.className = "col right";
     stage.topics.forEach((t, i) => {
       const chip = document.createElement("div");
-      chip.className = "topic " + (t.kind || "core") + (doneSet.has(t.id) ? " done" : "");
-      chip.textContent = t.title;
+      const lev = HIGH_LEVERAGE.has(t.id);
+      chip.className = "topic " + (t.kind || "core")
+        + (lev ? " leverage" : "") + (doneSet.has(t.id) ? " done" : "");
+      chip.innerHTML = (lev ? '<span class="star" title="High-leverage (80/20)">★</span>' : "")
+        + esc(t.title);
       chip.dataset.id = t.id;
       chip.addEventListener("click", () => openTopic(stage, si, t));
       (i % 2 === 0 ? left : right).appendChild(chip);
@@ -2730,6 +2779,11 @@ function openTopic(stage, si, t) {
   $("#dTitle").textContent = t.title;
   const done = doneSet.has(t.id);
   $("#dBody").innerHTML =
+    (HIGH_LEVERAGE.has(t.id)
+      ? `<section><p class="lev-note"><b>★ High-leverage topic (80/20).</b> One of the ~20% of
+         topics that deliver ~80% of real-world capability — prioritize depth and practice here,
+         and make it rock-solid before moving on. (You still cover every topic for mastery.)</p></section>`
+      : "") +
     `<section><p class="summary">${inline(t.summary || "")}</p></section>` +
     listSection("What to learn", t.learn) +
     resSection(t.resources) +
